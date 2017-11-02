@@ -1,3 +1,7 @@
+@import url('~codemirror/lib/codemirror.css');
+
+
+
 :root {
 }
 
@@ -12,8 +16,11 @@
 
 .trails-sql-overview {
   /*flex: 1 1 auto;*/
+  max-height: 200px;
 }
 
 .trails-editor {
-  /*flex: 1 1 auto;*/
+  /*min-height: 200px;*/
+  flex: 1 1 auto;
+  /*background-color: #f0f0f0;*/
 }

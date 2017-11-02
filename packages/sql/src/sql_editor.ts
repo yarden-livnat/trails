@@ -13,7 +13,7 @@ import {
 } from '@jupyterlab/codeeditor';
 
 import {
-  CodeMirrorEditorFactory
+  CodeMirrorEditorFactory, CodeMirrorEditor
 } from '@jupyterlab/codemirror';
 
 import {
@@ -30,14 +30,26 @@ class SQLEditor extends Widget {
     this.addClass(EDITOR_CLASS);
 
     let factory = createFactory();
-    this.editor = factory({
+    // this.editor = factory({
+    //   host: this.node,
+    //   model: new SQLModel({})
+    // });
+
+    this.editor = new CodeMirrorEditor({
       host: this.node,
-      model: new SQLModel({})
+      model: new SQLModel({}),
+      config: {
+        mode: 'text/x-mssql',
+        lineNumbers: true
+      }
     });
+    let e = this.editor.editor;
+    console.log('mode:', this.editor.getOption('mode'));
     this.editor.model.selections.changed.connect(this._onSelectionsChanged, this);
   }
 
-  readonly editor: CodeEditor.IEditor;;
+  readonly editor: CodeMirrorEditor;
+  // readonly editor: CodeEditor.IEditor;;
 
   get model(): CodeEditor.IModel {
     return this.editor.model;

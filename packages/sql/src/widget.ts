@@ -5,7 +5,7 @@ import {
 
 import {
   SQLEditor
-} from './sql_editor';
+} from './editor';
 
 
 import {

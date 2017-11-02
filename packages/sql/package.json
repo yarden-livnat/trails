@@ -23,7 +23,9 @@
   "dependencies": {
     "@jupyterlab/application": "^0.11.1",
     "@phosphor/widgets": "^1.5.0",
+    "@types/codemirror": "0.0.50",
     "@types/d3": "^4.11.0",
+    "codemirror": "^5.31.0",
     "d3": "^4.11.0"
   },
   "devDependencies": {
