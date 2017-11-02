@@ -1,0 +1,19 @@
+:root {
+}
+
+.trails-sql {
+  display: flex;
+  flex-direction: row;
+}
+
+.trails-sql .p-SplitPanel {
+  flex: 1 1 auto;
+}
+
+.trails-sql-overview {
+  /*flex: 1 1 auto;*/
+}
+
+.trails-editor {
+  /*flex: 1 1 auto;*/
+}
