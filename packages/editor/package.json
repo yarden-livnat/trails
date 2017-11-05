@@ -1,0 +1,35 @@
+{
+  "name": "@trails/editor",
+  "version": "0.1.0",
+  "description": "SQL editor",
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib/"
+  },
+  "scripts": {
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "watch": "tsc -w",
+    "test": "webpack",
+    "link": "jupyter labextension link ."
+  },
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
+  ],
+  "dependencies": {
+    "codemirror": "^5.31.0",
+    "@trails/editor": "^0.1.0"
+  },
+  "devDependencies": {
+    "@types/codemirror": "0.0.50",
+    "clean-webpack-plugin": "^0.1.17",
+    "css-loader": "^0.28.7",
+    "rimraf": "^2.6.2",
+    "style-loader": "^0.19.0",
+    "ts-loader": "^3.1.1",
+    "typescript": "^2.6.1",
+    "webpack": "^3.8.1"
+  }
+}

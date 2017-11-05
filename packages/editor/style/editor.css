@@ -1,0 +1,24 @@
+
+span.cm-block {
+  color:green;
+  font-weight: bold;
+  font-size: larger;
+}
+
+span.cm-block-table {
+  color:green;
+  font-weight: bold;
+  font-size: larger;
+}
+
+span.cm-block-error {
+  background-color: Tomato;
+  font-weight: bold;
+  font-size: larger;
+}
+
+.foo {
+  color: blue;
+  font-weight: bold;
+  font-size: larger;
+}
