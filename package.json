@@ -21,7 +21,7 @@
 		"test:firefox": "lerna run test:firefox --stream",
 		"test:ie": "lerna run test:ie --concurrency 1 --stream",
 
-		"watch": "watch \"npm run build\" ./packages/** --wait 10 --filter=scripts/watch-filter.js --ignoreDotFiles"
+		"watch": "lerna run --parallel watch && jupyter lab --watch"
 
 	},
 	"repository": {

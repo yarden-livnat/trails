@@ -1,7 +1,5 @@
 @import url('~codemirror/lib/codemirror.css');
 
-
-
 :root {
 }
 
@@ -23,4 +21,22 @@
   /*min-height: 200px;*/
   flex: 1 1 auto;
   /*background-color: #f0f0f0;*/
+}
+
+.trails-sql-overview {
+  display: flex;
+  justify-content: flex-start;
+  align-items: flex-start;
+
+}
+
+.trails-sql-overview .header {
+  /*order: 0;*/
+  flex: 0;
+  padding: 5px;
+}
+
+.trails-sql-overview .header div {
+  background-color: lightgray;
+  padding: 2px;
 }

@@ -25,7 +25,7 @@ import {
   SQLModel, ISQLModel
 } from './model';
 
-import {Editor} from '@trails/editor';
+import { Editor, Bookmark } from '@trails/editor';
 
 const EDITOR_CLASS = 'trails-editor';
 const HAS_SELECTION_CLASS = 'trails-mode-has-primary-selection';
@@ -72,19 +72,11 @@ class SQLEditor extends Widget {
         'Shift-Enter': () => { this.exec(); },
       }
     });
-
-    editor.on('changes', (instance, changes) => {
-      console.log('changes', changes);
-    });
-
-    editor.on('overview', (cm: CodeMirror.Editor, ...data:any[]) => {
-      console.log('overview:', data);
-    });
   }
 
-  on(event: 'overview', cb: (overview: any) => void) {
-    this.editor.on('overview', (cm: CodeMirror.Editor, ...data:any[]) => {
-      cb(data[0]);
+  on(event: 'overview', cb: (bookmark: Bookmark[]) => void) {
+    this.editor.on('overview', (cm: CodeMirror.Editor, bookmarks?:Bookmark[]) => {
+      cb(bookmarks);
     });
   }
 

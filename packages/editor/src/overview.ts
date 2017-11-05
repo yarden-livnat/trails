@@ -1,6 +1,14 @@
 import * as CodeMirror from 'codemirror';
 import {matchDecorator} from './decorator';
 
+export
+interface Bookmark extends CodeMirror.TextMarker {
+  type: string,
+  name?: string,
+  __isOverview?: boolean
+}
+
+
 CodeMirror.defineOption('overview', false, function(cm, val, old: any) {
   console.log('overview option', val, old, 'init:', (CodeMirror as any)['Init']);
   if (old /* && !old == CodeMirror.Init*/) {
@@ -40,8 +48,8 @@ function onChange(cm) {
 }
 
 function updateOverview(cm) {
-  let bookmarks : Map<number, CodeMirror.TextMarker> = new Map();
-  let n = 0;
+  let bookmarks : Map<number, Bookmark> = new Map();
+  let n = 0, update = false;
 
   for (let l = 0, end = cm.lastLine(); l <= end; l++) {
     let line = cm.getLine(l);
@@ -50,12 +58,13 @@ function updateOverview(cm) {
       let pos = CodeMirror.Pos(l, 3);
       let bookmark = cm.findMarksAt(pos).find( mark => mark.__isOverview);
       if (!bookmark) {
-        bookmark = cm.setBookmark(pos)
-        bookmark.type = m[1];
-        bookmark.name = m[2];
+        bookmark = cm.setBookmark(pos) as Bookmark;
         bookmark.__isOverview =  true;
         n++;
       }
+      if (bookmark.type != m[1]) { bookmark.type = m[1]; update = true;}
+      if (bookmark.name != m[2]) { bookmark.name = m[2]; update = true;}
+
       bookmarks.set(bookmark.id, bookmark);
     }
   }
@@ -66,8 +75,8 @@ function updateOverview(cm) {
     prev.forEach( item => bookmarks.has(item.id) || item.clear());
   }
 
-  if (n || prev.size != bookmarks.size) {
+  if (update || n || prev.size != bookmarks.size) {
     cm.state.overview.bookmarks = bookmarks;
-    CodeMirror.signal(cm, "overview", cm, bookmarks);
+    CodeMirror.signal(cm, "overview", cm, Array.from(bookmarks.values()));
   }
 }
