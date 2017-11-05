@@ -8,17 +8,15 @@ import {
   Widget
 } from '@phosphor/widgets';
 
-import * as CodeMirror from 'codemirror';
-import 'codemirror/mode/meta';
-import 'codemirror/addon/runmode/runmode';
-import 'codemirror/mode/sql/sql';
-
-import 'codemirror/addon/edit/matchbrackets.js';
-import 'codemirror/addon/edit/closebrackets.js';
-import 'codemirror/addon/comment/comment.js';
-import 'codemirror/addon/scroll/scrollpastend.js';
-import 'codemirror/addon/search/searchcursor';
-import 'codemirror/addon/search/search';
+// import 'codemirror/mode/meta';
+// import 'codemirror/addon/runmode/runmode';
+//
+// import 'codemirror/addon/edit/matchbrackets.js';
+// import 'codemirror/addon/edit/closebrackets.js';
+// import 'codemirror/addon/comment/comment.js';
+// import 'codemirror/addon/scroll/scrollpastend.js';
+// import 'codemirror/addon/search/searchcursor';
+// import 'codemirror/addon/search/search';
 // import 'codemirror/keymap/emacs.js';
 // import 'codemirror/keymap/sublime.js';
 // import 'codemirror/keymap/vim.js';
@@ -26,6 +24,8 @@ import 'codemirror/addon/search/search';
 import {
   SQLModel, ISQLModel
 } from './model';
+
+import {Editor} from '@trails/editor';
 
 const EDITOR_CLASS = 'trails-editor';
 const HAS_SELECTION_CLASS = 'trails-mode-has-primary-selection';
@@ -50,7 +50,6 @@ let default_config = {
   // scrollPastEnd: false,
   // showCursorWhenSelecting: false,
   smartIndent: true,
-  // tabSize: 4,
 };
 
 let extra_keys = {
@@ -58,7 +57,6 @@ let extra_keys = {
 }
 
 let config = {
-
   ...default_config,
   ...extra_keys
 }
@@ -69,22 +67,24 @@ class SQLEditor extends Widget {
     super();
     this.addClass(EDITOR_CLASS);
 
-    let editor = this.editor = CodeMirror(this.node, {
-        mode: 'text/x-mssql',
-        ...default_config,
-        extraKeys: {
-          'Cmd-Right': 'goLineLeft',
-          'End': 'goLineRight',
-          'Cmd-Left': 'goLineLeft',
-          'Tab': 'indentMoreOrinsertTab',
-          'Shift-Tab': 'indentLess',
-          'Cmd-/': 'toggleComment',
-          'Ctrl-/': 'toggleComment',
-          'Shift-Enter': () => { this.exec();  },
-        },
+    let editor = this.editor = Editor(this.node, {
+      extraKeys: {
+        'Shift-Enter': () => { this.exec(); },
+      }
     });
+
     editor.on('changes', (instance, changes) => {
       console.log('changes', changes);
+    });
+
+    editor.on('overview', (cm: CodeMirror.Editor, ...data:any[]) => {
+      console.log('overview:', data);
+    });
+  }
+
+  on(event: 'overview', cb: (overview: any) => void) {
+    this.editor.on('overview', (cm: CodeMirror.Editor, ...data:any[]) => {
+      cb(data[0]);
     });
   }
 
@@ -99,12 +99,8 @@ class SQLEditor extends Widget {
       return;
     }
     super.dispose();
-    // this.editor.dispose();
   }
 
-  // private onChange(cm: CodeMirror.Editor, changes: [<object>]) {
-  //   console.log('on changes', change);
-  // }
 
   protected onActivateRequest(msg: Message): void {
     this.editor.focus();

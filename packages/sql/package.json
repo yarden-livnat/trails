@@ -26,7 +26,8 @@
     "@types/codemirror": "0.0.50",
     "@types/d3": "^4.11.0",
     "codemirror": "^5.31.0",
-    "d3": "^4.11.0"
+    "d3": "^4.11.0",
+    "@trails/editor": "^0.1.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

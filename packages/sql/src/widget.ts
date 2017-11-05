@@ -26,7 +26,10 @@ class TrailsSQL extends Widget {
     this.addClass('trails-sql');
 
     this.editor = new SQLEditor();
-    this.overview = new Overview();
+    let overview = this.overview = new Overview();
+
+    this.editor.on('overview', (data:any) => overview.bookmarks = data );
+
 
     let panel = this.panel = new SplitPanel();
     panel.orientation = 'vertical';
