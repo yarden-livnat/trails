@@ -9,17 +9,8 @@ import {
 } from '@phosphor/widgets';
 
 // import 'codemirror/mode/meta';
-// import 'codemirror/addon/runmode/runmode';
-//
-// import 'codemirror/addon/edit/matchbrackets.js';
-// import 'codemirror/addon/edit/closebrackets.js';
-// import 'codemirror/addon/comment/comment.js';
 // import 'codemirror/addon/scroll/scrollpastend.js';
-// import 'codemirror/addon/search/searchcursor';
-// import 'codemirror/addon/search/search';
-// import 'codemirror/keymap/emacs.js';
-// import 'codemirror/keymap/sublime.js';
-// import 'codemirror/keymap/vim.js';
+
 
 import {
   SQLModel, ISQLModel
@@ -30,36 +21,6 @@ import { Editor, Bookmark } from '@trails/editor';
 const EDITOR_CLASS = 'trails-editor';
 const HAS_SELECTION_CLASS = 'trails-mode-has-primary-selection';
 
-
-let default_config = {
-  // autoClosingBrackets: true,
-  // coverGutterNextToScrollbar: false,
-  // dragDrop: true,
-  // electricChars: true,
-  // fixedGutter: true,
-  // // gutters: Object.freeze([]),
-  // keyMap: 'default',
-  // insertSpaces: true,
-  lineNumbers: true,
-  // lineSeparator: null as string,
-  // lineWiseCopyCut: true,
-  // lineWrap: true,
-    //  matchBrackets: true,
-  // readOnly: false,
-  // scrollbarStyle: 'native',
-  // scrollPastEnd: false,
-  // showCursorWhenSelecting: false,
-  smartIndent: true,
-};
-
-let extra_keys = {
-
-}
-
-let config = {
-  ...default_config,
-  ...extra_keys
-}
 
 export
 class SQLEditor extends Widget {
@@ -110,6 +71,8 @@ class SQLEditor extends Widget {
   }
 
   protected onResize(msg: Widget.ResizeMessage): void {
+    // console.log('resize', msg.width, msg.height);
+    // this.editor.setSize(msg.width, msg.height)
     // if (msg.width >= 0 && msg.height >= 0) {
     //   this.editor.setSize(msg);
     // } else if (this.isVisible) {

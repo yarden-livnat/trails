@@ -3,6 +3,7 @@ import {
 } from '@phosphor/widgets';
 
 import * as d3 from 'd3';
+import Panel from './panel';
 
 import { Bookmark, decorators  } from '@trails/editor';
 
@@ -12,6 +13,7 @@ type Bookmark = CodeMirror.TextMarker;
 type Nest = {key: string; values: any; value: any}[];
 
 const headers = Object.keys(decorators);
+let panel = Panel();
 
 function find(a, value) {
   for (let item of a) {
@@ -31,41 +33,27 @@ class Overview extends Widget {
       .key( (d: Bookmark) => d.type ).sortKeys(d3.ascending)
       .sortValues( (a,b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
 
-    d3.select(this.node).selectAll('.header')
-      .data(headers)
-      .enter()
-        .append('div')
-        .attr('class', 'header')
-        .text(d => d);
+    this._panels = headers.map(name => { return {title: name, items: []}; });
+
+    this.render();
+    // d3.select(this.node)
+    //   .call(panel, this._panels);
   }
 
   set bookmarks(arr: Bookmark[]) {
-    this._bookmarks = this._nest.entries(arr);
+    let bookmarks = this._nest.entries(arr);
+    for (let p of this._panels) {
+      p.items = find(bookmarks, p.title);
+    }
     this.render();
   }
 
   private _bookmarks: Nest;
   private _nest : d3.Nest<Bookmark, any>;
-
-
+  private _panels: any[];
 
   render() {
-    let root = d3.select(this.node);
-    let marks = this._bookmarks;
-
-    root.selectAll('.header')
-        .each( function(g: string) {
-          let data = find(marks, g);
-          let items = d3.select(this).selectAll('div')
-            .data(data);
-          items.enter().append('div')
-            // .each( (marker: any) => {
-            //     marker.on('fold', () => console.log('fold', marker.name));
-            //     marker.on('unfold', () => console.log('funold', marker.name));
-            //   })
-            .merge(items)
-            .text( (d : any)  => d.name || 'unnamed');
-          items.exit().remove();
-        });
+    d3.select(this.node)
+      .call(panel, this._panels);
   }
 }

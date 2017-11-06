@@ -1,6 +1,5 @@
-import 'codemirror/addon/fold/foldgutter.css';
-
 import * as CodeMirror from 'codemirror';
+import 'codemirror/addon/fold/foldgutter.css';
 import 'codemirror/addon/fold/foldcode';
 import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/comment-fold';

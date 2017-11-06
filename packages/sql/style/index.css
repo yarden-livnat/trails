@@ -10,33 +10,66 @@
 
 .trails-sql .p-SplitPanel {
   flex: 1 1 auto;
+  background-color: #f0f0f0;
 }
+
 
 .trails-sql-overview {
   /*flex: 1 1 auto;*/
   max-height: 200px;
 }
 
-.trails-editor {
-  /*min-height: 200px;*/
-  flex: 1 1 auto;
-  /*background-color: #f0f0f0;*/
-}
-
 .trails-sql-overview {
   display: flex;
+  flex-direction: row;
   justify-content: flex-start;
   align-items: flex-start;
-
 }
 
-.trails-sql-overview .header {
+.panel {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.panel-header {
+  background-color: #f0000;
+  font-weight: bold;
+}
+
+.panel-body {
+  /*border: 1px solid gray;*/
+}
+
+.panel-item {
+  /*background-color: #00f4f0;*/
+}
+
+.overview-header {
+  display: flex;
+  flex-direction: row;
+}
+
+.overview-header .header-item {
   /*order: 0;*/
   flex: 0;
+  width: 30px;
   padding: 5px;
 }
 
 .trails-sql-overview .header div {
   background-color: lightgray;
   padding: 2px;
+}
+
+
+.trails-editor {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.trails-editor .CodeMirror {
+  flex: 1 1 auto;
+  height: auto;
+  /*border: 1px solid #eee;*/
 }
