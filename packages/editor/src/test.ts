@@ -1,5 +1,7 @@
+import 'codemirror/lib/codemirror.css';
 import * as CodeMirror from 'codemirror';
 import {Editor} from './editor';
+
 
 var editor = Editor(document.getElementById("editor") as HTMLTextAreaElement, {
   extraKeys: {
@@ -14,13 +16,21 @@ let text = document.createTextNode("widget");
 let widget = document.createElement("span");
 widget.appendChild(text);
 widget.className = "CodeMirror-foldmarker";
-editor.getDoc().setBookmark({line:2, ch:3}, {
-  widget: widget
-});
+// editor.getDoc().setBookmark({line:2, ch:3}, {
+//   widget: widget
+// });
 
 
 editor.on('overview', (cm: CodeMirror.Editor, ...data) => {
   console.log('overview:bookmarks=', data[0]);
 });
 
-editor.on('change', (cm: CodeMirror.Editor, obj) => console.log('change'));
+editor.on('change', (cm: CodeMirror.Editor, obj) => {
+  console.log('change');
+  let n = (editor as any).lastLine();
+  for (let i=0; i<=n; i++) {
+    editor.getLineTokens(i).forEach( token => {
+      console.log(token.type, token.string, token.state, token.start, token.end);
+    })
+  }
+});

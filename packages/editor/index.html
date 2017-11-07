@@ -4,20 +4,28 @@
       <title>Trails Editor</title>
   </head>
   <body>
-      <textarea id="editor">
--- comment
-select -- coment
--- @foo
-error block
-line
-line
+      <textarea id="editor">      
+IF OBJECT_ID( 'tempdb..#visits' )IS NOT NULL DROP TABLE #visits;
+SELECT visitsid,sta3n,patientsid,visitdatetime,institutionsid,divisionsid,primarystopcodesid,secondarystopcodesid,locationsid
+INTO #visits
+FROM cdwwork.[Outpat].[Visit]
+WHERE visitdatetime BETWEEN dateadd(day,-1,cast(cast(getdate() as datetime2) as date)) AND getdate() AND sta3n=672
+;--select * FROM #visits
 
--- @block
--- this is a block
--- @table
-select * from foo
- where foo.a < foo.b
- limt 100
+IF OBJECT_ID( 'tempdb..#inpatients' )IS NOT NULL DROP TABLE #inpatients;
+SELECT *
+INTO #inpatients
+FROM cdwwork.inpat.inpatient
+WHERE admitdatetime BETWEEN dateadd(day,-1,cast(cast(getdate() as datetime2) as date)) AND getdate()  AND sta3n=672
+;
+
+IF OBJECT_ID( 'tempdb..#appt' )IS NOT NULL DROP TABLE #appt;
+SELECT *
+INTO #appt
+FROM [CDWWork].[Appt].[Appointment]
+WHERE patientsid IN (SELECT distinct patientsid FROM #visits) AND sta3n=672
+AND appointmentdatetime BETWEEN dateadd(day,-1,cast(cast(getdate() as datetime2) as date)) AND getdate()
+;
 </textarea>
   <script src="lib/test.js"></script>
   </body>

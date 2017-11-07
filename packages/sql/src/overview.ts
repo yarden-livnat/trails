@@ -36,14 +36,17 @@ class Overview extends Widget {
     this._panels = headers.map(name => { return {title: name, items: []}; });
 
     this.render();
-    // d3.select(this.node)
-    //   .call(panel, this._panels);
   }
 
-  set bookmarks(arr: Bookmark[]) {
-    let bookmarks = this._nest.entries(arr);
+  set bookmarks(bookmarks: Bookmark[]) {
+    bookmarks.forEach( (b : any) => {
+      b.on('fold', state => {b._fold = state == 'fold'; this.render();});
+      b.on('clear', () => {b.off('fold'); b.off('clear'); });
+    });
+
+    let groups = this._nest.entries(bookmarks);
     for (let p of this._panels) {
-      p.items = find(bookmarks, p.title);
+      p.items = find(groups, p.title);
     }
     this.render();
   }

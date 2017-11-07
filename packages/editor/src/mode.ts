@@ -1,6 +1,13 @@
 import * as CodeMirror from 'codemirror';
 import 'codemirror/mode/sql/sql';
 
+let patterns = {
+  'from': /\sfrom\s+((#?[\[\]\.\w]+)(?:\s,\s)*)+/gi,
+  'into': /\sinto\s+(#?[\[\]\.\w]+)/gi
+}
+
+let names = Object.keys(patterns);
+
 CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
   let mode = 'text/x-' + config.dialect || 'mssql'
   let sql = CodeMirror.getMode(config, {
@@ -8,6 +15,14 @@ CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
   });
 
   function trails(stream: any, state: any) {
+    if (stream.peek() == ';') {
+      stream.next();
+      return "semicolon";
+    }
+    // for (let name of names) {
+    //   let m = stream.match(patterns[name])
+    //   if (m)
+    // }
     if (stream.sol() && stream.match(/-- (?=@)/)) {
       state.context = {
         prev: state.context,

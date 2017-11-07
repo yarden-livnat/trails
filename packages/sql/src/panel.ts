@@ -1,6 +1,4 @@
 
-// import * as d3 from 'd3';
-
 import {component} from 'd3-component';
 
 export default function() {
@@ -11,21 +9,16 @@ export default function() {
   let list = component('div', 'panel-body')
     .render( (selection, items) => selection.call(marker, items));
 
-
   let marker = component('div', 'panel-item')
     .create( (s, d) => {
-      s.append('span').text('#');
-      s.append('span').text('***')
-      d.on('fold', (a) => console.log('fold', a, d))
+      console.log('marker', d, d.find().from);
+      s.on('click', d => d.doc.setCursor(d.find().from));
     })
     .render( (s, d) => {
-      s.selectAll('span').data(['$', d.name || '---'])
-        .each( d => console.log(d))
-        .text( d => d);
-
-
-    });
-
+      s.text(d => d.name || '...')
+       .classed('fold', d => d._fold)
+     })
+    .destroy( (s, d) => s.on('click', null));
 
   return component("div", "panel")
     .render( (selection, d) => {

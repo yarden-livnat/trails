@@ -19,6 +19,8 @@ CodeMirror.defineOption('overview', false, function(cm, val, old: any) {
     update(cm);
     cm.on('change', onChange);
     cm.on('swapDoc', onChange);
+    cm.on('fold', (cm, from, to) => onFold(cm, from, 'fold'));
+    cm.on('unfold', (cm, from, to) => onFold(cm, from, 'unfold'));
   }
   // cm.on('markerAdded', () => { console.log('markerAdded');});
   // cm.on('change', () => { console.log('change');})
@@ -45,6 +47,15 @@ function onChange(cm) {
   let opt = state.options;
   clearTimeout(state.changeUpdate);
   state.changeUpdate = setTimeout( () => update(cm), opt.delay || 500);
+}
+
+function onFold(cm, from, type) {
+  console.log(type, from);
+  for (let mark of cm.findMarksAt({line: from.line, ch: 3})) {
+    if (mark.__isOverview) {
+      CodeMirror.signal(mark, 'fold', type);
+    }
+  }
 }
 
 function updateOverview(cm) {

@@ -19,8 +19,7 @@
     "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}"
   ],
   "dependencies": {
-    "codemirror": "^5.31.0",
-    "@trails/editor": "^0.1.0"
+    "codemirror": "^5.31.0"
   },
   "devDependencies": {
     "@types/codemirror": "0.0.50",

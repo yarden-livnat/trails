@@ -1,9 +1,10 @@
 
 export
 let decorators = {
-  block: /@(block)(?:$|\s+(\w*))/,
-  table: /@(table)(?:$|\s+(\w*))/,
-  procedure: /@(proc|procedure)(?:$|\s+(\w*))/
+  block: /@(block)(?:$|\s+(\S*))/,
+  table: /@(table)(?:$|\s+(\S*))/,
+  into: /@(into)(?:$|\s+(\S*))/,
+  procedure: /@(proc|procedure)(?:$|\s+(\S*))/,
 };
 
 let patterns = Object.keys(decorators).map(key => decorators[key]);

@@ -1,4 +1,4 @@
-@import url('~codemirror/lib/codemirror.css');
+/*@import url('~codemirror/lib/codemirror.css');*/
 
 :root {
 }
@@ -6,11 +6,12 @@
 .trails-sql {
   display: flex;
   flex-direction: row;
+  font-family: var(--jp-ui-font-family);
+  background: var(--jp-layout-color1);
 }
 
 .trails-sql .p-SplitPanel {
   flex: 1 1 auto;
-  background-color: #f0f0f0;
 }
 
 
@@ -33,33 +34,31 @@
 }
 
 .panel-header {
-  background-color: #f0000;
-  font-weight: bold;
+  text-transform:capitalize;
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
 .panel-body {
-  /*border: 1px solid gray;*/
+  overflow: auto;
 }
 
 .panel-item {
-  /*background-color: #00f4f0;*/
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
 }
 
-.overview-header {
-  display: flex;
-  flex-direction: row;
-}
-
-.overview-header .header-item {
-  /*order: 0;*/
-  flex: 0;
-  width: 30px;
-  padding: 5px;
-}
-
-.trails-sql-overview .header div {
-  background-color: lightgray;
-  padding: 2px;
+.panel-item.fold {
+  color: var(--jp-ui-font-color3);
 }
 
 

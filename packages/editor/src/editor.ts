@@ -1,4 +1,4 @@
-import 'codemirror/lib/codemirror.css';
+// import 'codemirror/lib/codemirror.css';
 import '../style/editor.css';
 
 import * as CodeMirror from 'codemirror';
@@ -11,6 +11,7 @@ import 'codemirror/addon/display/autorefresh';
 import './mode';
 import './fold';
 import './overview';
+// import './structure';
 
 let defaults = {
   mode: 'trails-sql',
@@ -25,8 +26,9 @@ let defaults = {
   foldGutter: true,
   gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
   overview: true,
+  // structure: true,
   extraKeys: {
-    'Cmd-[': function(cm){ console.log('fold'); cm.foldCode(cm.getCursor()); },
+    'Cmd-[': function(cm){ cm.foldCode(cm.getCursor()); },
     'Cmd-/': 'toggleComment',
     'Ctrl-/': 'toggleComment',
   },
