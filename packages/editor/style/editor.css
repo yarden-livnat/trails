@@ -6,6 +6,10 @@ span.cm-block {
   text-decoration: underline;
 }
 
+span.cm-annotation {
+  font-size: larger;
+}
+
 span.cm-block-table {
   color:green;
   font-weight: bold;

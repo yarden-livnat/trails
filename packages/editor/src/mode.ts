@@ -1,12 +1,24 @@
 import * as CodeMirror from 'codemirror';
 import 'codemirror/mode/sql/sql';
 
-let patterns = {
-  'from': /\sfrom\s+((#?[\[\]\.\w]+)(?:\s,\s)*)+/gi,
-  'into': /\sinto\s+(#?[\[\]\.\w]+)/gi
-}
+const pre = {style: 'pre-block', pattern: /--\s+(?=@)/};
+const post = {style: 'post-block', pattern: /$/};
 
-let names = Object.keys(patterns);
+let annotations = [
+  {style: 'annotation block', pattern: /^@block(?: |$)/},
+  {style: 'annotation', pattern: /^@into(?: |$)/},
+  {style: 'annotation', pattern: /^@into(?: |$)/},
+  {style: 'annotation', pattern: /^@into(?: |$)/},
+  {style: 'annotation', pattern: /^@into(?: |$)/},
+  {style: 'annotation', pattern: /^@proc|@procedure|@function(?: |$)/},
+];
+
+let keywords = [
+  {style: 'keyword', pattern: /^GO/i},
+  {style: 'semicolon', pattern: /^;/}
+];
+
+let keys = Object.keys(annotations);
 
 CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
   let mode = 'text/x-' + config.dialect || 'mssql'
@@ -15,29 +27,29 @@ CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
   });
 
   function trails(stream: any, state: any) {
-    if (stream.peek() == ';') {
-      stream.next();
-      return "semicolon";
-    }
-    // for (let name of names) {
-    //   let m = stream.match(patterns[name])
-    //   if (m)
-    // }
-    if (stream.sol() && stream.match(/-- (?=@)/)) {
-      state.context = {
-        prev: state.context,
-        type: 'pre-block'
+    if (!state.active) {
+      if (stream.match(pre.pattern)) {
+        state.active = true;
+        return pre.style;
       }
-      return 'pre-block';
-    } else if (state.context && state.context.type == 'pre-block') {
-        state.context = state.prev;
-        let m = stream.match(/@(block|table|procedure)(?= |$)/);
-        if (m) {
-          return m[1] == 'block' ? 'block' : 'block-'+m[1];
+      for (let keyword of keywords) {
+        if (stream.match(keyword.pattern)) {
+          return keyword.style;
         }
-        stream.match(/@\w*/);
-        return 'block-error';
+      }
+      return null;
     }
+    // state is active
+    if (stream.match(post.pattern)) {
+      state.active = false;
+      return post.style;
+    }
+
+    for (let annotation of annotations) {
+      if (stream.match(annotation.pattern))
+        return annotation.style;
+    }
+
     return null;
   }
 

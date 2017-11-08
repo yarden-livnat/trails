@@ -1,12 +1,20 @@
 import * as CodeMirror from 'codemirror';
 
 
+
+// export
+// namespace CodeMirror {
+// // //   export var Init: object;
+// };
+
+let Init = (CodeMirror as any)['Init'];
+
 CodeMirror.defineOption('structure', false, structure);
 
 function structure(cm, val, old) {
   console.log('structure option', val, old);
-  if (old && !old == CodeMirror.Init) {
-    cleanup();
+  if (old && !old == Init) {
+    cleanup(cm);
   }
   if (val) {
     cm.state.structure = new State(val);
@@ -17,7 +25,7 @@ function structure(cm, val, old) {
 
 
 
-function cleanup() {
+function cleanup(cm) {
   delete cm.state.structure;
 }
 
@@ -33,6 +41,7 @@ function delay(cm, change) {
 }
 
 function update(cm) {
+  listTokens(cm);
   let statements = findStatement(cm);
   parseStatements(cm, statements);
 }
@@ -41,6 +50,16 @@ function update(cm) {
 function onChange(cm, change) {
   console.log('change', change.from, change.to,' text=', change.text);
 
+}
+
+function listTokens(cm) {
+  console.log('***** tokens ****');
+  for (let l=0, n=cm.lastLine(); l <= n; l++) {
+    console.log('line',l);
+    for (let token of cm.getLineTokens(l)) {
+      console.log(token.string, token.type, token.state);
+    }
+  }
 }
 
 function findStatement(cm) {

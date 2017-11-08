@@ -11,7 +11,7 @@ import 'codemirror/addon/display/autorefresh';
 import './mode';
 import './fold';
 import './overview';
-// import './structure';
+import './structure';
 
 let defaults = {
   mode: 'trails-sql',
@@ -25,8 +25,8 @@ let defaults = {
   fixedGutter: true,
   foldGutter: true,
   gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-  overview: true,
-  // structure: true,
+  // overview: true,
+  structure: true,
   extraKeys: {
     'Cmd-[': function(cm){ cm.foldCode(cm.getCursor()); },
     'Cmd-/': 'toggleComment',
