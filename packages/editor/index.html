@@ -6,30 +6,13 @@
   <body>
       <textarea id="editor">
 -- @block Init
+
   -- @into #visits
-  IF OBJECT_ID( 'tempdb..#visits' )IS NOT NULL DROP TABLE #visits;
-  SELECT visitsid,sta3n,patientsid,visitdatetime,institutionsid,divisionsid,primarystopcodesid,secondarystopcodesid,locationsid
-  INTO #visits
-  FROM cdwwork.[Outpat].[Visit]
-  WHERE visitdatetime BETWEEN dateadd(day,-1,cast(cast(getdate() as datetime2) as date)) AND getdate() AND sta3n=672
-  ;--select * FROM #visits
+
 
   -- @into inpatients
-  IF OBJECT_ID( 'tempdb..#inpatients' )IS NOT NULL DROP TABLE #inpatients;
-  SELECT *
-  INTO #inpatients
-  FROM cdwwork.inpat.inpatient
-  WHERE admitdatetime BETWEEN dateadd(day,-1,cast(cast(getdate() as datetime2) as date)) AND getdate()  AND sta3n=672
-  ;
 
 -- @block foo
-  IF OBJECT_ID( 'tempdb..#appt' )IS NOT NULL DROP TABLE #appt;
-  SELECT *
-  INTO #appt
-  FROM [CDWWork].[Appt].[Appointment]
-  WHERE patientsid IN (SELECT distinct patientsid FROM #visits) AND sta3n=672
-  AND appointmentdatetime BETWEEN dateadd(day,-1,cast(cast(getdate() as datetime2) as date)) AND getdate()
-  ;
 
   -- @block inner
   select * from bar;
