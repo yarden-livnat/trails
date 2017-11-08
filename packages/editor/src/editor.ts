@@ -26,7 +26,7 @@ let defaults = {
   foldGutter: true,
   gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
   // overview: true,
-  structure: true,
+  // structure: true,
   extraKeys: {
     'Cmd-[': function(cm){ cm.foldCode(cm.getCursor()); },
     'Cmd-/': 'toggleComment',

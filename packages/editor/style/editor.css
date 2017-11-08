@@ -1,3 +1,8 @@
+span.cm-annotation {
+  color: green;
+  font-weight: bold;
+  text-decoration: underline;
+}
 
 span.cm-block {
   color:green;
@@ -6,9 +11,19 @@ span.cm-block {
   text-decoration: underline;
 }
 
-span.cm-annotation {
-  font-size: larger;
+pan.cm-pre-block {
+  color: green;
+  font-weight: bold;
+  /*font-size: larger;*/
+  text-decoration: underline;
 }
+pan.cm-post-block {
+  color: green;
+  font-weight: bold;
+  /*font-size: larger;*/
+  text-decoration: underline;
+}
+
 
 span.cm-block-table {
   color:green;
@@ -20,6 +35,5 @@ span.cm-block-table {
 span.cm-block-error {
   color: #FE4D4D;
   font-weight: bold;
-  /*font-size: larger;*/
   text-decoration: underline;
 }

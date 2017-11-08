@@ -5,17 +5,18 @@ const pre = {style: 'pre-block', pattern: /--\s+(?=@)/};
 const post = {style: 'post-block', pattern: /$/};
 
 let annotations = [
-  {style: 'annotation block', pattern: /^@block(?: |$)/},
-  {style: 'annotation', pattern: /^@into(?: |$)/},
-  {style: 'annotation', pattern: /^@into(?: |$)/},
-  {style: 'annotation', pattern: /^@into(?: |$)/},
-  {style: 'annotation', pattern: /^@into(?: |$)/},
-  {style: 'annotation', pattern: /^@proc|@procedure|@function(?: |$)/},
+  {style: 'annotation block', pattern: /^@block(?=\s|$)/},
+  {style: 'annotation', pattern: /@into(?=\s|$)/},
+  {style: 'annotation', pattern: /^@report(?=s\|$)/},
+  {style: 'annotation', pattern: /^@info(?=\s|$)/},
+  {style: 'annotation', pattern: /^@debug(?=s\|$)/},
+  {style: 'annotation', pattern: /^@use(?=\s|$)/},
+  {style: 'annotation', pattern: /^@proc|@procedure|@function(?= |$)/},
 ];
 
 let keywords = [
   {style: 'keyword', pattern: /^GO/i},
-  {style: 'semicolon', pattern: /^;/}
+  {style: 'eos', pattern: /^;/}
 ];
 
 let keys = Object.keys(annotations);
@@ -27,30 +28,62 @@ CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
   });
 
   function trails(stream: any, state: any) {
-    if (!state.active) {
-      if (stream.match(pre.pattern)) {
-        state.active = true;
-        return pre.style;
+    // console.log('peek:', stream.pos, stream.peek());
+    if (state.context && state.context.trails) {
+      if (stream.eatSpace()) return null;
+      let type = state.context.type;
+      let m;
+
+      if (type == 'pre') {
+        for (let annotation of annotations) {
+          if (stream.match(annotation.pattern)) {
+            state.type = 'annotation';
+            return annotation.style;
+          }
+        }
+        if (stream.eatWhile(/\w/)) {
+          state.type = 'annotation';
+          return 'word';
+        }
+        
       }
-      for (let keyword of keywords) {
-        if (stream.match(keyword.pattern)) {
-          return keyword.style;
+      if (type == 'annotation') {
+        if ((m = stream.match(/\w+/))) {
+          state.type = 'name';
+          return 'name';
         }
       }
-      return null;
-    }
-    // state is active
-    if (stream.match(post.pattern)) {
-      state.active = false;
-      return post.style;
-    }
+      if (type == 'name') {
+        stream.skipToEnd();
+        return 'desc';
+      }
 
-    for (let annotation of annotations) {
-      if (stream.match(annotation.pattern))
-        return annotation.style;
+      if (stream.match(post.pattern)) {
+        console.log('eol');
+        pop(state);
+        return post.style;
+      }
+    }
+    if (stream.match(pre.pattern)) {
+      push(state);
+      return pre.style;
     }
 
     return null;
+  }
+
+  function push(state) {
+    state.context = {
+      prev: state.context,
+      // indent: stream.indentation(),
+      // col: stream.column(),
+      trails: true,
+      type: 'pre'
+    };
+  }
+
+  function pop(state) {
+    state.context = state.context.prev;
   }
 
   return {
