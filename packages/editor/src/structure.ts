@@ -1,13 +1,12 @@
 import * as CodeMirror from 'codemirror';
 
-
-
-// export
-// namespace CodeMirror {
-// // //   export var Init: object;
-// };
-
 let Init = (CodeMirror as any)['Init'];
+export
+interface Bookmark extends CodeMirror.TextMarker {
+  type: string,
+  name?: string,
+  __isOverview?: boolean
+}
 
 CodeMirror.defineOption('structure', false, structure);
 
@@ -24,31 +23,104 @@ function structure(cm, val, old) {
 }
 
 
-
 function cleanup(cm) {
   delete cm.state.structure;
 }
 
 function State(options) {
   this.options = options;
-}
-
-function delay(cm, change) {
-  let state = cm.state.structure;
-  if (!state) return;
-  clearTimeout(state.timeout);
-  state.timeout = setTimeout( () => update(cm), state.options.delay || 500);
-}
-
-function update(cm) {
-  listTokens(cm);
-  let statements = findStatement(cm);
-  parseStatements(cm, statements);
+  this.bookmarks = new Map();
 }
 
 
 function onChange(cm, change) {
   console.log('change', change.from, change.to,' text=', change.text);
+  let state = cm.state.structure;
+  if (!state) return;
+  let opt = state.options;
+  clearTimeout(state.timeout);
+  state.timeout = setTimeout( () => update(cm), opt.delay || 500);
+}
+
+function update(cm) {
+  if (!cm.state.structure) return;
+  cm.operation( () => updateStructure(cm));
+}
+
+function updateStructure(cm) {
+  updateBookmarks(cm);
+  // listTokens(cm);
+  // let statements = findStatement(cm);
+  // parseStatements(cm, statements);
+}
+
+function Pos(l,c) {
+  return CodeMirror.Pos(l,c);
+}
+
+function find(tokens, type) {
+  let token, done;
+  while (([token, done] = tokens.next())) {
+    if (done) return null;
+    if (token.type == type) return token;
+  }
+}
+
+function updateBookmarks(cm) {
+  console.log('*** update bookmarks');
+  let bookmarks : Map<number, Bookmark> = new Map();
+  let n = 0, update = false;
+
+  for (let line=0, last = cm.lastLine(); line <= last; line++) {
+    let tokens = cm.getLineTokens(line).values();
+
+    let token = find(tokens, 'annotaton');
+    if (!token) continue;
+
+    let pos = Pos(line, token.start);
+    let bookmark = cm.findMarksAt(Pos).find( mark => mark.__structure);
+    if (!bookmark) {
+      bookmark = cm.setBookmark(pos) as Bookmark;
+      bookmark._structure = true;
+    }
+    if (bookmark.type != token. type) { bookmark.type = token.type; update = true;}
+
+    token = find(tokens, 'identifier');
+    let name = token && token.string || null;
+    if (bookmark.name != name) { bookmark.name = name; update = true}
+
+    bookmarks.set(bookmark.id, bookmark);
+  }
+  let prev = cm.state.structure.bookmarks;
+
+  if (prev.size + n != bookmarks.size) {
+    prev.forEach( item => bookmarks.has(item.id) || item.clear());
+  }
+
+  if (update || n || prev.size != bookmarks.size) {
+    cm.state.structure.bookmarks = bookmarks;
+    console.log('report bookmarks', bookmarks);
+    CodeMirror.signal(cm, "structure", cm, Array.from(bookmarks.values()));
+  }
+    // let tokens = cm.getLineTokens(line);
+    //
+    // let t = 1, n = tokens.length;
+    // while (t < n && tokens[t].type != 'annotation') t++;
+    // if (t == n) continue;
+    //
+    // token = tokens[t];
+    // let pos = Pos(line, token.start)
+    // let bookmark = cm.findMarksAt(Pos).find( mark => mark.__structure);
+    // if (!bookmark) {
+    //   bookmark = cm.setBookmark(pos) as Bookmark;
+    //   bookmark._structure = true;
+    // }
+    // if (bookmark.type != token.type) { bookmark.type = token.type; update = true;}
+    // while (++t < n && tokens[t].type != 'identifier') t++;
+    // if (t < n) {
+    //   token = tokens[t];
+    //   if (bookmark.name != token.string) { bookmark.name = token.string; update = true;}
+    // }
 
 }
 
