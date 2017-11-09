@@ -5,22 +5,43 @@
   </head>
   <body>
       <textarea id="editor">
--- @block Init
 
-  -- @into #visits
+-- comment
+select * from foo
+    where a = b;
 
+-- @block init setup
+do this;
+do that;
 
-  -- @into inpatients
+  -- @block inner inside the first one
+  do more;
 
--- @block foo
+  -- @into foo
+  insert into foo;
 
-  -- @block inner
-  select * from bar;
+  	indented line
+    another one
 
-  GO
--- @block last
+  continue
 
-cleanup
+  -- @block bar
+  fdfaf
+  /*
+  	multi line comment
+    another comment line
+    */
+
+  -- @use db1
+
+-- @block 2 second block
+
+  -- @block name
+
+-- @block
+a block with no name
+        ​
+
 </textarea>
   <script src="lib/test.js"></script>
   </body>

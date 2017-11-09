@@ -1,3 +1,8 @@
+.decorator {
+  background: #f0f0f0;
+  /*background-color: light-blue;*/
+}
+
 span.cm-annotation {
   color: green;
   font-weight: bold;
@@ -7,32 +12,19 @@ span.cm-annotation {
 span.cm-block {
   color:green;
   font-weight: bold;
-  /*font-size: larger;*/
   text-decoration: underline;
 }
 
-pan.cm-pre-block {
-  color: green;
+span.cm-identifier {
   font-weight: bold;
-  /*font-size: larger;*/
-  text-decoration: underline;
 }
-pan.cm-post-block {
-  color: green;
-  font-weight: bold;
-  /*font-size: larger;*/
-  text-decoration: underline;
+
+span.cm-desc {
+  font-style: italic;
 }
 
 
-span.cm-block-table {
-  color:green;
-  font-weight: bold;
-  /*font-size: larger;*/
-  text-decoration: underline;
-}
-
-span.cm-block-error {
+span.cm-error {
   color: #FE4D4D;
   font-weight: bold;
   text-decoration: underline;

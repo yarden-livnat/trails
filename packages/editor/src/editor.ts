@@ -8,6 +8,7 @@ import 'codemirror/addon/search/jump-to-line';
 import 'codemirror/addon/dialog/dialog.css';
 import 'codemirror/addon/dialog/dialog';
 import 'codemirror/addon/display/autorefresh';
+import 'codemirror/addon/comment/comment';
 import './mode';
 import './fold';
 import './overview';
@@ -28,7 +29,7 @@ let defaults = {
   // overview: true,
   // structure: true,
   extraKeys: {
-    'Cmd-[': function(cm){ cm.foldCode(cm.getCursor()); },
+    'Cmd-0': function(cm){ cm.foldCode(cm.getCursor()); },
     'Cmd-/': 'toggleComment',
     'Ctrl-/': 'toggleComment',
   },
