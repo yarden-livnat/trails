@@ -5,14 +5,13 @@ import {
 import * as d3 from 'd3';
 import Panel from './panel';
 
-import { Bookmark, decorators  } from '@trails/editor';
+import { Bookmark, DECORATORS_NAMES  } from '@trails/editor';
 
 export
 type Bookmark = CodeMirror.TextMarker;
 
 type Nest = {key: string; values: any; value: any}[];
 
-const headers = Object.keys(decorators);
 let panel = Panel();
 
 function find(a, value) {
@@ -33,7 +32,7 @@ class Overview extends Widget {
       .key( (d: Bookmark) => d.type ).sortKeys(d3.ascending)
       .sortValues( (a,b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
 
-    this._panels = headers.map(name => { return {title: name, items: []}; });
+    this._panels = DECORATORS_NAMES.map( name => ({title: name, items: []}));
 
     this.render();
   }

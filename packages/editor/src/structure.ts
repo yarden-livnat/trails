@@ -1,12 +1,9 @@
 import * as CodeMirror from 'codemirror';
+import {Bookmark} from './bookmark';
+import {decorators} from './mode';
 
 let Init = (CodeMirror as any)['Init'];
-export
-interface Bookmark extends CodeMirror.TextMarker {
-  type: string,
-  name?: string,
-  __isOverview?: boolean
-}
+
 
 CodeMirror.defineOption('structure', false, structure);
 
@@ -19,9 +16,11 @@ function structure(cm, val, old) {
     cm.state.structure = new State(val);
     update(cm);
     cm.on('change', onChange);
+    cm.on('swapDoc', onChange);
+    cm.on('fold', (cm, from, to) => onFold(cm, from, 'fold'));
+    cm.on('unfold', (cm, from, to) => onFold(cm, from, 'unfold'));
   }
 }
-
 
 function cleanup(cm) {
   delete cm.state.structure;
@@ -32,7 +31,6 @@ function State(options) {
   this.bookmarks = new Map();
 }
 
-
 function onChange(cm, change) {
   console.log('change', change.from, change.to,' text=', change.text);
   let state = cm.state.structure;
@@ -40,6 +38,15 @@ function onChange(cm, change) {
   let opt = state.options;
   clearTimeout(state.timeout);
   state.timeout = setTimeout( () => update(cm), opt.delay || 500);
+}
+
+function onFold(cm, from, type) {
+  console.log(type, from);
+  for (let mark of cm.findMarksAt({line: from.line, ch: 3})) {
+    if (mark.__isOverview) {
+      CodeMirror.signal(mark, 'fold', type);
+    }
+  }
 }
 
 function update(cm) {
@@ -67,26 +74,28 @@ function find(tokens, type) {
 }
 
 function updateBookmarks(cm) {
-  console.log('*** update bookmarks');
   let bookmarks : Map<number, Bookmark> = new Map();
   let n = 0, update = false;
 
   for (let line=0, last = cm.lastLine(); line <= last; line++) {
-    let tokens = cm.getLineTokens(line).values();
+    let token, tokens = cm.getLineTokens(line);
+    let t = 0, n = tokens.length;
 
-    let token = find(tokens, 'annotaton');
-    if (!token) continue;
+    while (++t < n && (token = tokens[t]).type != 'annotation');
+    if (t >= n) continue;
 
     let pos = Pos(line, token.start);
-    let bookmark = cm.findMarksAt(Pos).find( mark => mark.__structure);
+    let bookmark = cm.findMarksAt(pos).find( mark => mark.__structure);
     if (!bookmark) {
       bookmark = cm.setBookmark(pos) as Bookmark;
       bookmark._structure = true;
     }
-    if (bookmark.type != token. type) { bookmark.type = token.type; update = true;}
+    let type = decorators.get(token.string.toLowerCase());
+    if (bookmark.type != type) { bookmark.type = type; update = true;}
+    bookmark.offset = token.start;
 
-    token = find(tokens, 'identifier');
-    let name = token && token.string || null;
+    while (++t < n && (token = tokens[t]).type != 'identifier');
+    let name = t < n && token.string || null;
     if (bookmark.name != name) { bookmark.name = name; update = true}
 
     bookmarks.set(bookmark.id, bookmark);
@@ -99,29 +108,8 @@ function updateBookmarks(cm) {
 
   if (update || n || prev.size != bookmarks.size) {
     cm.state.structure.bookmarks = bookmarks;
-    console.log('report bookmarks', bookmarks);
     CodeMirror.signal(cm, "structure", cm, Array.from(bookmarks.values()));
   }
-    // let tokens = cm.getLineTokens(line);
-    //
-    // let t = 1, n = tokens.length;
-    // while (t < n && tokens[t].type != 'annotation') t++;
-    // if (t == n) continue;
-    //
-    // token = tokens[t];
-    // let pos = Pos(line, token.start)
-    // let bookmark = cm.findMarksAt(Pos).find( mark => mark.__structure);
-    // if (!bookmark) {
-    //   bookmark = cm.setBookmark(pos) as Bookmark;
-    //   bookmark._structure = true;
-    // }
-    // if (bookmark.type != token.type) { bookmark.type = token.type; update = true;}
-    // while (++t < n && tokens[t].type != 'identifier') t++;
-    // if (t < n) {
-    //   token = tokens[t];
-    //   if (bookmark.name != token.string) { bookmark.name = token.string; update = true;}
-    // }
-
 }
 
 function listTokens(cm) {

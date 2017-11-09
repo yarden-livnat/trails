@@ -51,7 +51,6 @@
 .panel-item {
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
-  font-weight: 600;
   text-overflow: ellipsis;
   white-space: nowrap;
   overflow: hidden;

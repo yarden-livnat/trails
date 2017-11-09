@@ -2,16 +2,15 @@ import * as CodeMirror from 'codemirror';
 import 'codemirror/mode/sql/sql';
 
 const decorator = {token: 'decorator', pattern: /^\s*--\s+(?=@)/};
-const post = {token: 'eol', pattern: /$/};
 
 let annotations = [
-  {token: 'annotation', pattern: /^@block(?=\s|$)/i},
-  {token: 'annotation', pattern: /i@into(?=\s|$)/i},
-  {token: 'annotation', pattern: /^@report(?=s\|$)/i},
+  {token: 'annotation', name: 'Block', pattern: /^@block(?=\s|$)/i},
+  {token: 'annotation', name: 'Table', pattern: /@table(?=\s|$)/i},
+  {token: 'annotation', name: 'Report', pattern: /^@report(?=s\|$)/i},
   {token: 'annotation', pattern: /^@info(?=\s|$)/i},
   {token: 'annotation', pattern: /^@debug(?=s\|$)/i},
-  {token: 'annotation', pattern: /^@use(?=\s|$)/i},
-  {token: 'annotation', pattern: /^@proc|@procedure|@function(?= |$)/i},
+  {token: 'annotation', name: 'Use', pattern: /^@use(?=\s|$)/i},
+  {token: 'annotation', name: 'Procdure', pattern: /^@proc|@procedure|@function(?= |$)/i},
   {token: 'unknown',    pattern: /^@\w*/},
   {token: 'identifier', pattern: /\S+/},
   {token: 'text',       pattern: /\S+/}
@@ -22,9 +21,21 @@ let keywords = [
   {token: 'eos', pattern: /^;/}
 ];
 
-// let keys = Object.keys(annotations);
+export
+let decorators = new Map(
+  [['@block', 'Block'],
+   ['@table', 'Table'],
+   ['@report', 'Report'],
+   ['@use', 'Use'],
+   ['@proc', 'Procdure'],
+   ['@procedure', 'Procdure'],
+   ['@fucntion', 'Procdure']
+ ]);
 
-CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
+ export
+ const DECORATORS_NAMES = ['Block', 'Table', 'Procdure', 'Report', 'Use'];
+
+CodeMirror.defineMode("trails-sql", function(config, parserConfig) {
   let mode = 'text/x-' + config.dialect || 'mssql'
   let sql = CodeMirror.getMode(config, {
     name: mode
@@ -71,7 +82,7 @@ CodeMirror.defineMode("trails-sql", function(config :any, parserConfig) {
     return 'desc';
   }
 
-  function parser(stream: any, state: any) {
+  function parser(stream, state) {
     if (state.context && state.context.trails) {
       let style = parser_trails(stream, state);
       if (stream.eol()) pop(state);

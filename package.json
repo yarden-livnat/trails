@@ -21,7 +21,8 @@
 		"test:firefox": "lerna run test:firefox --stream",
 		"test:ie": "lerna run test:ie --concurrency 1 --stream",
 
-		"watch": "lerna run --parallel watch && jupyter lab --watch"
+		"watch": "lerna run --parallel watch",
+		"link": "lerna run link"
 
 	},
 	"repository": {

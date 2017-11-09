@@ -1,3 +1,3 @@
 export * from './editor';
-export { Bookmark } from './overview';
-export * from './decorator';
+export * from './bookmark';
+export * from './mode'; 
