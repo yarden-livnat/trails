@@ -10,10 +10,7 @@ export default function() {
     .render( (selection, items) => selection.call(marker, items));
 
   let marker = component('div', 'panel-item')
-    .create( (s, d) => {
-      console.log('marker', d, d.find().from);
-      s.on('click', d => d.doc.setCursor(d.find().from));
-    })
+    .create( (s, d) => s.on('click', d => d.doc.setCursor(d.find().from)))
     .render( (s, d) => {
       s.text(d => d.name || '...')
        .classed('fold', d => d._fold)

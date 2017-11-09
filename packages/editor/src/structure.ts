@@ -8,7 +8,6 @@ let Init = (CodeMirror as any)['Init'];
 CodeMirror.defineOption('structure', false, structure);
 
 function structure(cm, val, old) {
-  console.log('structure option', val, old);
   if (old && !old == Init) {
     cleanup(cm);
   }
@@ -17,8 +16,8 @@ function structure(cm, val, old) {
     update(cm);
     cm.on('change', onChange);
     cm.on('swapDoc', onChange);
-    cm.on('fold', (cm, from, to) => onFold(cm, from, 'fold'));
-    cm.on('unfold', (cm, from, to) => onFold(cm, from, 'unfold'));
+    cm.on('fold', (cm, from, to) => onFold(cm, from, to, 'fold'));
+    cm.on('unfold', (cm, from, to) => onFold(cm, from, to, 'unfold'));
   }
 }
 
@@ -32,7 +31,6 @@ function State(options) {
 }
 
 function onChange(cm, change) {
-  console.log('change', change.from, change.to,' text=', change.text);
   let state = cm.state.structure;
   if (!state) return;
   let opt = state.options;
@@ -40,22 +38,34 @@ function onChange(cm, change) {
   state.timeout = setTimeout( () => update(cm), opt.delay || 500);
 }
 
-function onFold(cm, from, type) {
-  console.log(type, from);
-  for (let mark of cm.findMarksAt({line: from.line, ch: 3})) {
-    if (mark.__isOverview) {
-      CodeMirror.signal(mark, 'fold', type);
-    }
+function onFold(cm, from, to, type) {
+  let report = false;
+  let fold = type == 'fold';
+  let bookmark = cm.findMarks(Pos(from.line,0), Pos(from.line+1, 0)).find( mark => mark._structure);
+  if (bookmark) {
+    bookmark._fold = fold;
+    bookmark._fold_explicit = fold;
+    report = true;
   }
+  for (let mark of cm.findMarks(Pos(from.line+1, 0), to)) {
+    if (mark._structure && !mark._fold_explicit ) {
+      mark._fold = fold;
+      report = true;
+    }
+  };
+  if (report) CodeMirror.signal(cm, 'structure.update');
 }
 
-function update(cm) {
+function update( cm, change = null) {
   if (!cm.state.structure) return;
-  cm.operation( () => updateStructure(cm));
+  let from = change && change.from || Pos(0, 0);
+  let to = change && change.to || Pos(cm.lastLine(), cm.getLine(cm.lastLine()).length-1);
+  cm.operation(() => updateStructure(cm, from, to));
 }
 
-function updateStructure(cm) {
-  updateBookmarks(cm);
+
+function updateStructure(cm, from, to) {
+  updateBookmarks(cm, from, to);
   // listTokens(cm);
   // let statements = findStatement(cm);
   // parseStatements(cm, statements);
@@ -65,51 +75,47 @@ function Pos(l,c) {
   return CodeMirror.Pos(l,c);
 }
 
-function find(tokens, type) {
-  let token, done;
-  while (([token, done] = tokens.next())) {
-    if (done) return null;
-    if (token.type == type) return token;
-  }
+function findAnnotation(cm, line) {
+  let tokens = cm.getLineTokens(line);
+  let t = 0, n = tokens.length;
+  let annotation, name;
+
+  while (++t < n && (annotation = tokens[t]).type != 'annotation');
+  if (t >= n) return null;
+  while (++t < n && (name = tokens[t]).type != 'identifier');
+
+  return {
+    type: decorators.get(annotation.string.toLowerCase()),
+    pos: Pos(line, annotation.start),
+    name: t < n && name.string || null
+  };
 }
 
-function updateBookmarks(cm) {
-  let bookmarks : Map<number, Bookmark> = new Map();
-  let n = 0, update = false;
+function updateBookmarks(cm, start, end) {
+  let bookmark, bookmarks = [];
+  for (let line=start.line; line <=end.line; line++) {
+    let info = findAnnotation(cm, line);
+    let from = line == start.line ? start : Pos(line, 0);
+    let to = line == end.line? end : Pos(line, cm.getLine(line).length);
 
-  for (let line=0, last = cm.lastLine(); line <= last; line++) {
-    let token, tokens = cm.getLineTokens(line);
-    let t = 0, n = tokens.length;
+    if (!info) {
+      bookmark = cm.findMarks(from, to).find( mark => mark._structure);
+      if (bookmark) bookmark.clear();
+      continue;
+    }
 
-    while (++t < n && (token = tokens[t]).type != 'annotation');
-    if (t >= n) continue;
-
-    let pos = Pos(line, token.start);
-    let bookmark = cm.findMarksAt(pos).find( mark => mark.__structure);
+    let update = false;
+    bookmark = cm.findMarksAt(info.pos).find( mark => mark._structure);
     if (!bookmark) {
-      bookmark = cm.setBookmark(pos) as Bookmark;
+      bookmark =  cm.setBookmark(info.pos) as Bookmark;
       bookmark._structure = true;
     }
-    let type = decorators.get(token.string.toLowerCase());
-    if (bookmark.type != type) { bookmark.type = type; update = true;}
-    bookmark.offset = token.start;
+    if (bookmark.type != info.type) { bookmark.type = info.type; update = true;}
+    if (bookmark.name != info.name) { bookmark.name = info.name; update = true;}
 
-    while (++t < n && (token = tokens[t]).type != 'identifier');
-    let name = t < n && token.string || null;
-    if (bookmark.name != name) { bookmark.name = name; update = true}
-
-    bookmarks.set(bookmark.id, bookmark);
+    if (update) bookmarks.push(bookmark);
   }
-  let prev = cm.state.structure.bookmarks;
-
-  if (prev.size + n != bookmarks.size) {
-    prev.forEach( item => bookmarks.has(item.id) || item.clear());
-  }
-
-  if (update || n || prev.size != bookmarks.size) {
-    cm.state.structure.bookmarks = bookmarks;
-    CodeMirror.signal(cm, "structure", cm, Array.from(bookmarks.values()));
-  }
+  if (bookmarks.length > 0) CodeMirror.signal(cm, "structure", cm, bookmarks);
 }
 
 function listTokens(cm) {

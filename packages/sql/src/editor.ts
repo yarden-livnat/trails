@@ -35,10 +35,8 @@ class SQLEditor extends Widget {
     });
   }
 
-  on(event: 'structure', cb: (bookmark: Bookmark[]) => void) {
-    this.editor.on('structure', (cm: CodeMirror.Editor, bookmarks?:Bookmark[]) => {
-      cb(bookmarks);
-    });
+  on(type, cb: (data?) => void)  {
+    this.editor.on(type, (cm: CodeMirror.Editor, data?) => cb(data));
   }
 
   readonly editor: CodeMirror.Editor;

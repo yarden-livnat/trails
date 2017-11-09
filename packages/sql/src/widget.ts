@@ -28,7 +28,8 @@ class TrailsSQL extends Widget {
     this.editor = new SQLEditor();
     let overview = this.overview = new Overview();
 
-    this.editor.on('structure', (data:any) => overview.bookmarks = data );
+    this.editor.on('structure', (data:any) => overview.bookmarks(data) );
+    this.editor.on('structure.update', () => overview.update() );
 
 
     let panel = this.panel = new SplitPanel();

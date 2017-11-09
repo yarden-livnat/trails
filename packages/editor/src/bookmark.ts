@@ -1,9 +1,11 @@
 import * as CodeMirror from 'codemirror';
 
-export 
+export
 interface Bookmark extends CodeMirror.TextMarker {
   type: string,
   name?: string,
   offset: number,
-  __isOverview?: boolean
+  _structure?: boolean,
+  _fold?: boolean,
+  _fold_explicit?: boolean
 }

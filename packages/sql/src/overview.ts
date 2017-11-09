@@ -12,14 +12,11 @@ type Bookmark = CodeMirror.TextMarker;
 
 type Nest = {key: string; values: any; value: any}[];
 
-let panel = Panel();
+let panelRenderer = Panel();
 
-function find(a, value) {
-  for (let item of a) {
-    if (item.key == value)
-      return item.values || [];
-  }
-  return [];
+interface IPanel {
+  title: string,
+  items: Bookmark[];
 }
 
 export
@@ -28,34 +25,36 @@ class Overview extends Widget {
     super();
     this.addClass('trails-sql-overview');
 
-    this._nest = d3.nest<Bookmark>()
-      .key( (d: Bookmark) => d.type ).sortKeys(d3.ascending)
-      .sortValues( (a,b) => a.name < b.name ? -1 : a.name > b.name ? 1 : 0);
-
-    this._panels = DECORATORS_NAMES.map( name => ({title: name, items: []}));
+    this.panels = DECORATORS_NAMES.map( name => ({title: name, items: []}));
 
     this.render();
   }
 
-  set bookmarks(bookmarks: Bookmark[]) {
-    bookmarks.forEach( (b : any) => {
-      b.on('fold', state => {b._fold = state == 'fold'; this.render();});
-      b.on('clear', () => {b.off('fold'); b.off('clear'); });
-    });
+  update() {
+    this.render();
+  }
 
-    let groups = this._nest.entries(bookmarks);
-    for (let p of this._panels) {
-      p.items = find(groups, p.title);
+  bookmarks(bookmarks: Bookmark[]) {
+    for (let bookmark of bookmarks) {
+      let panel = this.panels.find( p => p.title == bookmark.type );
+      let item = panel.items.find( item => item == bookmark);
+
+      if (!item) {
+        panel.items.push(bookmark);
+        bookmark.on('clear', () => {
+          bookmark.off('fold'); bookmark.off('clear');
+          panel.items.splice( panel.items.findIndex( b => b == bookmark), 1);
+          this.render();
+        });
+      }
     }
     this.render();
   }
 
-  private _bookmarks: Nest;
-  private _nest : d3.Nest<Bookmark, any>;
-  private _panels: any[];
+  private panels: IPanel[];
 
   render() {
     d3.select(this.node)
-      .call(panel, this._panels);
+      .call(panelRenderer, this.panels);
   }
 }
