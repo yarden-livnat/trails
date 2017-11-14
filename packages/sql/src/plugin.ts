@@ -25,8 +25,6 @@ export
 interface ITrailsSQLExtension {}
 
 function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
-  console.log('SQL extension activated');
-
   let widget: TrailsSQL;
 
   const command: string ='trails:sql';
@@ -56,7 +54,7 @@ function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRe
   });
 };
 
-export 
+export
 const extension: JupyterLabPlugin<void> = {
   id: 'trails.extension.sql',
   autoStart: true,

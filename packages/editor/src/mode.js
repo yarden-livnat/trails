@@ -10,7 +10,7 @@ let annotations = [
   {token: 'annotation', pattern: /^@info(?=\s|$)/i},
   {token: 'annotation', pattern: /^@debug(?=s\|$)/i},
   {token: 'annotation', name: 'Use', pattern: /^@use(?=\s|$)/i},
-  {token: 'annotation', name: 'Procdure', pattern: /^@proc|@procedure|@function(?= |$)/i},
+  {token: 'annotation', name: 'Procdure', pattern: /^@procedure|@function(?= |$)/i},
   {token: 'unknown',    pattern: /^@\w*/},
   {token: 'identifier', pattern: /\S+/},
   {token: 'text',       pattern: /\S+/}

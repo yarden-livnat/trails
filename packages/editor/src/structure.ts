@@ -33,6 +33,7 @@ function State(options) {
 function onChange(cm, change) {
   let state = cm.state.structure;
   if (!state) return;
+  // console.log('onChange from:',change.from, 'to:', change.to, ' change:',change);
   let opt = state.options;
   clearTimeout(state.timeout);
   state.timeout = setTimeout( () => update(cm), opt.delay || 500);
@@ -65,7 +66,7 @@ function update( cm, change = null) {
 
 
 function updateStructure(cm, from, to) {
-  updateBookmarks(cm, from, to);
+  updateAllBookmarks(cm, from, to);
   // listTokens(cm);
   // let statements = findStatement(cm);
   // parseStatements(cm, statements);
@@ -91,7 +92,10 @@ function findAnnotation(cm, line) {
   };
 }
 
+let count = 0;
 function updateBookmarks(cm, start, end) {
+  console.log('upadateBookmarks[', count++,'] start=', start, ' end=', end);
+  let t0 = performance.now();
   let bookmark, bookmarks = [];
   for (let line=start.line; line <=end.line; line++) {
     let info = findAnnotation(cm, line);
@@ -115,7 +119,33 @@ function updateBookmarks(cm, start, end) {
 
     if (update) bookmarks.push(bookmark);
   }
+  let t1 = performance.now();
+  console.log('update bookmarks in ', (t1-t0), ' msec')
   if (bookmarks.length > 0) CodeMirror.signal(cm, "structure", cm, bookmarks);
+}
+
+function updateAllBookmarks(cm, start, end) {
+  let t0 = performance.now();
+  let bookmark, bookmarks = [];
+
+  for (bookmark of cm.state.structure.bookmarks)
+    bookmark.clear();
+
+  for (let line=start.line; line <=end.line; line++) {
+    let info = findAnnotation(cm, line);
+    if (!info)  continue;
+
+    bookmark =  cm.setBookmark(info.pos) as Bookmark;
+    bookmark._structure = true;
+    bookmark.type = info.type;
+    bookmark.name = info.name;
+
+    bookmarks.push(bookmark);
+  }
+  let t1 = performance.now();
+  console.log('update bookmarks in ', (t1-t0), ' msec')
+  cm.state.structure.bookmarks = bookmarks;
+  CodeMirror.signal(cm, "structure", cm, bookmarks);
 }
 
 function listTokens(cm) {

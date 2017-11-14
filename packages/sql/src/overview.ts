@@ -35,18 +35,12 @@ class Overview extends Widget {
   }
 
   bookmarks(bookmarks: Bookmark[]) {
+    for (let panel of this.panels) {
+      panel.items = [];
+    }
     for (let bookmark of bookmarks) {
       let panel = this.panels.find( p => p.title == bookmark.type );
-      let item = panel.items.find( item => item == bookmark);
-
-      if (!item) {
         panel.items.push(bookmark);
-        bookmark.on('clear', () => {
-          bookmark.off('fold'); bookmark.off('clear');
-          panel.items.splice( panel.items.findIndex( b => b == bookmark), 1);
-          this.render();
-        });
-      }
     }
     this.render();
   }

@@ -15,7 +15,10 @@ export default function() {
       s.text(d => d.name || '...')
        .classed('fold', d => d._fold)
      })
-    .destroy( (s, d) => s.on('click', null));
+    .destroy( (s, d) => {
+      s.on('click', null);
+      s.remove();
+    });
 
   return component("div", "panel")
     .render( (selection, d) => {
