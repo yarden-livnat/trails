@@ -1,6 +1,6 @@
 import '../style/index.css';
 import {extension} from './plugin';
 
-export * from './widget';
+export * from './sqleditor';
 
 export default extension;

@@ -3,27 +3,27 @@ import {
 } from '@phosphor/widgets';
 
 import * as d3 from 'd3';
-import Panel from './panel';
+import Renderer from './overview_renderer';
 
 import { Bookmark, DECORATORS_NAMES  } from '@trails/editor';
 
 export
 type Bookmark = CodeMirror.TextMarker;
 
-type Nest = {key: string; values: any; value: any}[];
-
-let panelRenderer = Panel();
+let panelRenderer = Renderer();
 
 interface IPanel {
   title: string,
   items: Bookmark[];
 }
 
+const SQL_OVERVIEW_CLASS = 'sql-overview';
+
 export
 class Overview extends Widget {
   constructor() {
     super();
-    this.addClass('trails-sql-overview');
+    this.addClass(SQL_OVERVIEW_CLASS);
 
     this.panels = DECORATORS_NAMES.map( name => ({title: name, items: []}));
 
@@ -40,7 +40,7 @@ class Overview extends Widget {
     }
     for (let bookmark of bookmarks) {
       let panel = this.panels.find( p => p.title == bookmark.type );
-        panel.items.push(bookmark);
+      panel.items.push(bookmark);
     }
     this.render();
   }

@@ -18,13 +18,13 @@ import {
 
 import { Editor, Bookmark } from '@trails/editor';
 
-const EDITOR_CLASS = 'trails-editor';
+const EDITOR_CLASS = 'sql-editor';
 const HAS_SELECTION_CLASS = 'trails-mode-has-primary-selection';
 
 
 export
-class SQLEditor extends Widget {
-  constructor(options: SQLEditor.IOptions = {}) {
+class EditorWidget extends Widget {
+  constructor(options: EditorWidget.IOptions = {}) {
     super();
     this.addClass(EDITOR_CLASS);
 
@@ -96,7 +96,7 @@ class SQLEditor extends Widget {
 
 
 export
-namespace SQLEditor {
+namespace EditorWidget {
   export interface IOptions {
     // config?: Partial<CodeEditor.IConfig>;
   }

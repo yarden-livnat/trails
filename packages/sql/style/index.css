@@ -3,37 +3,40 @@
 :root {
 }
 
-.trails-sql {
-  display: flex;
-  flex-direction: row;
+.sql-panel {
   font-family: var(--jp-ui-font-family);
   background: var(--jp-layout-color1);
+  display: flex;
+  flex-direction: column;
 }
 
-.trails-sql .p-SplitPanel {
-  flex: 1 1 auto;
+.sql-panel-toolbar {
 }
 
+.sql-overview-button {
 
-.trails-sql-overview {
+}
+.sql-overview {
   /*flex: 1 1 auto;*/
+  min-height: 150px;
   max-height: 200px;
 }
 
-.trails-sql-overview {
+.sql-overview {
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: stretch;
 }
 
-.panel {
+.sql-overview-panel {
   display: flex;
   flex-direction: column;
   margin: 10px;
+  justify-content: flex-start;
 }
 
-.panel-header {
+.sql-overview-panel-header {
   text-transform:capitalize;
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
@@ -41,14 +44,16 @@
   letter-spacing: 1px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  overflow: hidden;
+  /*overflow: hidden;*/
+  padding-bottom: 3px;
+  border-bottom: solid 1px #6b6b6b;
 }
 
-.panel-body {
+.sql-overview-panel-body {
   overflow: auto;
 }
 
-.panel-item {
+.sql-overview-panel-item {
   color: var(--jp-ui-font-color1);
   font-size: var(--jp-ui-font-size1);
   text-overflow: ellipsis;
@@ -56,18 +61,20 @@
   overflow: hidden;
 }
 
-.panel-item.fold {
+.sql-overview-panel-item.fold {
   color: var(--jp-ui-font-color3);
 }
 
 
-.trails-editor {
-  display: flex;
-  flex: 1 1 auto;
+.sql-editor {
+  /*display: flex;
+  flex: 1 1 auto;*/
+  overflow: auto;
+  border-top: var(--jp-border-width) solid var(--jp-toolbar-border-color);
 }
 
-.trails-editor .CodeMirror {
-  flex: 1 1 auto;
-  height: auto;
+.sql-editor .CodeMirror {
+  /*flex: 1 1 auto;
+  height: auto;*/
   /*border: 1px solid #eee;*/
 }
