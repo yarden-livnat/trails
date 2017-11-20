@@ -1,6 +1,6 @@
 {
   "name": "@trails/sql",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "SQL view",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
@@ -37,6 +37,6 @@
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
-    "typescript": "^2.7.0-dev.20171031"
+    "typescript": "next"
   }
 }

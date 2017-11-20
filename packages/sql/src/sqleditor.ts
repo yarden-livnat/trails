@@ -50,7 +50,7 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     let context = this.context = options.context;
 
     this.id = 'trails-sql';
-    this.title.label = 'sql';;
+    this.title.label = 'sql';
     this.title.closable = true;
 
     let toolbar = this.buildToolbar();
@@ -93,7 +93,7 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
   dispose() {
     super.dispose();
   }
-  
+
   private _onTitleChanged(): void {
     this.title.label = PathExt.basename(this.context.path);
   }

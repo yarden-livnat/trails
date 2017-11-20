@@ -3,6 +3,10 @@
 :root {
 }
 
+.sql-icon {
+  margin-top: 5px;
+}
+
 .sql-panel {
   font-family: var(--jp-ui-font-family);
   background: var(--jp-layout-color1);

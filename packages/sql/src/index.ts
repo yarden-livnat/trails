@@ -1,6 +1,8 @@
 import '../style/index.css';
-import {extension} from './plugin';
+import plugin from './plugin';
 
 export * from './sqleditor';
+export * from './factory';
+export * from './tracker';
 
-export default extension;
+export default plugin;

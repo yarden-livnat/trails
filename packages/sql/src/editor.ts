@@ -8,6 +8,8 @@ import {
   Widget
 } from '@phosphor/widgets';
 
+import * as CodeMirror from 'codemirror';
+
 // import 'codemirror/mode/meta';
 // import 'codemirror/addon/scroll/scrollpastend.js';
 
@@ -35,8 +37,8 @@ class EditorWidget extends Widget {
     });
   }
 
-  on(type, cb: (data?) => void)  {
-    this.editor.on(type, (cm: CodeMirror.Editor, data?) => cb(data));
+  on(type, cb: (data?:any) => void)  {
+    this.editor.on(type, (cm: CodeMirror.Editor, data?:any) => cb(data));
   }
 
   readonly editor: CodeMirror.Editor;

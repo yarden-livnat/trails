@@ -9,8 +9,8 @@ var editor = Editor(document.getElementById("editor") as HTMLTextAreaElement, {
   }
 });
 
-let f = {line:0, ch: 0};
-let t = {line: 5, ch: 3};
+// let f = {line:0, ch: 0};
+// let t = {line: 5, ch: 3};
 // editor.getDoc().markText(f, t, { className:'foo'});
 let text = document.createTextNode("widget");
 let widget = document.createElement("span");

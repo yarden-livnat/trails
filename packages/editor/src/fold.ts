@@ -6,12 +6,10 @@ import 'codemirror/addon/fold/comment-fold';
 
 CodeMirror.registerHelper('fold', 'trails', (cm: any, start: any) => {
   let pos = CodeMirror.Pos(start.line, 0);
-  let token;
 
   if (cm.getTokenTypeAt(pos) != 'decorator') return;
 
   let from = cm.getLineTokens(pos.line)[1];
-  let offset = from.start;
 
   let last = cm.lastLine();
   while (++pos.line <= last) {

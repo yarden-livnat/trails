@@ -16,10 +16,10 @@ let annotations = [
   {token: 'text',       pattern: /\S+/}
 ];
 
-let keywords = [
-  {token: 'keyword', pattern: /^GO/i},
-  {token: 'eos', pattern: /^;/}
-];
+// let keywords = [
+//   {token: 'keyword', pattern: /^GO/i},
+//   {token: 'eos', pattern: /^;/}
+// ];
 
 export
 let decorators = new Map(
@@ -36,7 +36,7 @@ let decorators = new Map(
  const DECORATORS_NAMES = ['Block', 'Table', 'Procdure', 'Report', 'Use'];
 
 CodeMirror.defineMode("trails-sql", function(config, parserConfig) {
-  let mode = 'text/x-' + config.dialect || 'mssql'
+  let mode = 'text/x-' + config['dialect'] || 'mssql'
   let sql = CodeMirror.getMode(config, {
     name: mode
   });

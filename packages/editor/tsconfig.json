@@ -1,9 +1,9 @@
 {
   "compilerOptions": {
-    "allowJs" :true,
+    "declaration": true,
     "noImplicitAny": false,
     "noEmitOnError": true,
-    "noUnusedLocals": false,
+    "noUnusedLocals": true,
     "skipLibCheck": true,
     "sourceMap": true,
     "module": "commonjs",
