@@ -37,6 +37,18 @@ class EditorWidget extends Widget {
     });
   }
 
+  get model(): CodeMirror.Doc {
+    return this.editor.getDoc();
+  }
+
+  get text(): string {
+    return this.editor.getDoc().getValue();
+  }
+
+  set text(value: string) {
+    this.editor.getDoc().setValue(value);
+  }
+
   on(type, cb: (data?:any) => void)  {
     this.editor.on(type, (cm: CodeMirror.Editor, data?:any) => cb(data));
   }

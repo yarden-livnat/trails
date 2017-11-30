@@ -7,6 +7,10 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
+  CodeEditor, IEditorServices
+} from '@jupyterlab/codeeditor';
+
+import {
   ReadonlyJSONObject
 } from '@phosphor/coreutils'
 
@@ -36,7 +40,7 @@ const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
   id: '@trails/sqleditor:plugin',
   provides: ISQLEditorTracker,
-  requires: [ICommandPalette, ILayoutRestorer],
+  requires: [ICommandPalette, ILayoutRestorer, IEditorServices],
   autoStart: true
 };
 
@@ -47,14 +51,14 @@ export default plugin;
 /**
  * Activate the Test widget extension.
  */
-function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer): ISQLEditorTracker {
-  const {commands, shell} = app;
+function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer, editorServices: IEditorServices): ISQLEditorTracker {
+  const id = plugin.id;
   const namespace = 'Trails';
   const factory = new SQLEditorFactory({
-    name: FACTORY,
-    fileTypes: FILE_TYPES,
-    defaultFor: FILE_TYPES
+    editorServices,
+    factoryOptions: { name: FACTORY, fileTypes: FILE_TYPES, defaultFor: FILE_TYPES}
   });
+  const {commands, shell} = app;
   const tracker = new InstanceTracker<SQLEditor>({ namespace });
 
   // Handle state restoration.

@@ -1,0 +1,84 @@
+/*@import url('~codemirror/lib/codemirror.css');*/
+
+:root {
+}
+
+.sql-icon {
+  margin-top: 5px;
+}
+
+.sql-panel {
+  font-family: var(--jp-ui-font-family);
+  background: var(--jp-layout-color1);
+  display: flex;
+  flex-direction: column;
+}
+
+.sql-panel-toolbar {
+}
+
+.sql-overview-button {
+
+}
+.sql-overview {
+  /*flex: 1 1 auto;*/
+  min-height: 150px;
+  max-height: 200px;
+}
+
+.sql-overview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: stretch;
+}
+
+.sql-overview-panel {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+  justify-content: flex-start;
+}
+
+.sql-overview-panel-header {
+  text-transform:capitalize;
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  /*overflow: hidden;*/
+  padding-bottom: 3px;
+  border-bottom: solid 1px #6b6b6b;
+}
+
+.sql-overview-panel-body {
+  overflow: auto;
+}
+
+.sql-overview-panel-item {
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.sql-overview-panel-item.fold {
+  color: var(--jp-ui-font-color3);
+}
+
+
+.sql-editor {
+  /*display: flex;
+  flex: 1 1 auto;*/
+  overflow: auto;
+  border-top: var(--jp-border-width) solid var(--jp-toolbar-border-color);
+}
+
+.sql-editor .CodeMirror {
+  /*flex: 1 1 auto;
+  height: auto;*/
+  /*border: 1px solid #eee;*/
+}

@@ -23,13 +23,21 @@ import {
 } from '@phosphor/widgets';
 
 import {
-  EditorWidget
-} from './editor';
-
+  CodeEditor, IEditorServices, IEditorMimeTypeService, CodeEditorWrapper
+} from '@jupyterlab/codeeditor';
 
 import {
-  Overview
-} from './overview';
+  FileEditor
+} from '@jupyterlab/fileeditor';
+
+// import {
+//   EditorWidget
+// } from './editor';
+
+
+// import {
+//   Overview
+// } from './overview';
 
 import * as d3 from 'd3';
 
@@ -47,37 +55,48 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
   constructor(options: SQLEditor.IOptions) {
     super();
     this.addClass(SQL_PANEL_CLASS);
-
-    let context = this._context = options.context;
-    context.pathChanged.connect(this.onPathChanged, this)
-    context.ready.then(() => { this._onContextReady(); });
-    this.onPathChanged();
-
     this.id = 'trails-sql';
     this.title.label = 'sql';
     this.title.closable = true;
 
+    let context = this._context = options.context;
+
+    let config = {
+      mode: 'trails-sql',
+      dialect: 'mssql',
+      lineNumbers: false,
+    }
+    let editor = this.editor = new CodeEditorWrapper( {
+      factory: options.factory,
+      model: options.context.model,
+      config: config as Partial<CodeEditor.IConfig>
+    });
+
     let toolbar = this.buildToolbar();
-
-    let editor = this._editor = new EditorWidget();
-    let overview = this._overview = new Overview();
-
-    editor.on('structure', (data:any) => overview.bookmarks(data) );
-    editor.on('structure.update', () => overview.update() );
-
-
     let layout = this.layout = new PanelLayout();
     layout.addWidget(toolbar);
-    layout.addWidget(overview);
+    // layout.addWidget(overview);
     layout.addWidget(editor);
 
+    this._mimeTypeService = options.mimeTypeService;
+    editor.model.value.text = context.model.toString();
+    context.pathChanged.connect(this.onPathChanged, this)
+    context.ready.then(() => { this._onContextReady(); });
+    this.onPathChanged();
+
+    // let overview = this._overview = new Overview();
+
+    // editor.on('structure', (data:any) => overview.bookmarks(data) );
+    // editor.on('structure.update', () => overview.update() );
+
     this._onTitleChanged();
-    context.pathChanged.connect(this._onTitleChanged, this);
   }
 
-  readonly _editor: EditorWidget;
-  readonly _overview: Overview;
+  readonly editor: CodeEditorWrapper;
+  // readonly editor: EditorWidget;
+  // readonly _overview: Overview;
   readonly _context: DocumentRegistry.Context;
+  private _mimeTypeService: IEditorMimeTypeService;
   private _ready = new PromiseDelegate<void>();
 
   get context(): DocumentRegistry.Context {
@@ -101,16 +120,18 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
       return;
     }
     const contextModel = this._context.model;
-    const editor = this._editor;
+    const editor = this.editor;
+    const editorModel = editor.model;
 
-    console.log('contextModel:', contextModel);
-    editor.text = contextModel.toString();
+    editorModel.value.text = contextModel.toString();
 
+    editor.editor.clearHistory();
     this.onDirtyState();
 
     contextModel.stateChanged.connect(this.onModelStateChanged, this);
     contextModel.contentChanged.connect(this.update, this);
-    this._context.fileChanged.connect(this.update, this);
+
+    // this._context.fileChanged.connect(this.update, this);
     this._ready.resolve(undefined);
   }
 
@@ -121,7 +142,6 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
   }
 
   private onDirtyState(): void {
-    console.log('handleDirtyState')
     if (this._context.model.dirty) {
        this.title.className += ` ${DIRTY_CLASS}`;
     } else {
@@ -130,19 +150,20 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
   }
 
   private onContentChanged(): void {
-    console.log('onContentChanged:', this._context.model.toString());
-    const oldValue = this._editor.text;
+    const editorModel = this.editor.model;
+    const oldValue = editorModel.value.text;
     const newValue = this._context.model.toString();
 
     if (oldValue !== newValue) {
-      this._editor.text = newValue;
+      editorModel.value.text = newValue;
     }
   }
 
   private onPathChanged():void {
+    const editor = this.editor;
     const path = this._context.path;
-    console.log('path chagned:', path);
-    // editor.model.mimeType = this._mimeTypeService.getMimeTypeByFilePath(path);
+
+    editor.model.mimeType = this._mimeTypeService.getMimeTypeByFilePath(path);
     this.title.label = PathExt.basename(path.split(':').pop()!);
   }
 
@@ -150,23 +171,23 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     let toolbar = new Toolbar();
     toolbar.addClass(SQL_PANEL_TOOLBAR_CLASS);
 
-    toolbar.addItem('overview', this.createOverviewButton());
+    // toolbar.addItem('overview', this.createOverviewButton());
     toolbar.addItem('table', this.createTableButton());
     toolbar.addItem('save', this.createSaveButton());
 
     return toolbar;
   }
 
-  private createOverviewButton(): ToolbarToggleButton {
-    return new ToolbarToggleButton({
-      className: TOOLBAR_OVERVIEW_CLASS,
-      onToggle: (state) => {
-        console.log('flip overview', state);
-        if (state) this._overview.hide()
-        else this._overview.show();
-      }
-    });
-  }
+  // private createOverviewButton(): ToolbarToggleButton {
+  //   return new ToolbarToggleButton({
+  //     className: TOOLBAR_OVERVIEW_CLASS,
+  //     onToggle: (state) => {
+  //       console.log('flip overview', state);
+  //       if (state) this._overview.hide()
+  //       else this._overview.show();
+  //     }
+  //   });
+  // }
 
   private createSaveButton(): ToolbarButton {
     return new ToolbarButton({
@@ -216,7 +237,7 @@ class ToolbarToggleButton extends ToolbarButton {
 
 export
 namespace SQLEditor {
-  export interface IOptions {
-      context: DocumentRegistry.Context;
+  export interface IOptions extends FileEditor.IOptions {
+      // context: DocumentRegistry.Context;
   }
 }
