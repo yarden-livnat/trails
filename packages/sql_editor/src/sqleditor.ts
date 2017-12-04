@@ -23,23 +23,25 @@ import {
 } from '@phosphor/widgets';
 
 import {
-  CodeEditor, IEditorServices, IEditorMimeTypeService, CodeEditorWrapper
+  // CodeEditor, IEditorServices,
+  IEditorMimeTypeService
+  // , CodeEditorWrapper
 } from '@jupyterlab/codeeditor';
 
 import {
   FileEditor
 } from '@jupyterlab/fileeditor';
 
-// import {
-//   EditorWidget
-// } from './editor';
+import {
+  EditorWidget
+} from './editor';
 
 
 // import {
 //   Overview
 // } from './overview';
 
-import * as d3 from 'd3';
+// import * as d3 from 'd3';
 
 const DIRTY_CLASS = 'jp-mod-dirty';
 
@@ -60,16 +62,22 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     this.title.closable = true;
 
     let context = this._context = options.context;
+    context.model.mimeType = 'text/x-trails';
 
-    let config = {
-      mode: 'trails-sql',
-      dialect: 'mssql',
-      lineNumbers: false,
-    }
-    let editor = this.editor = new CodeEditorWrapper( {
+    // let config = {
+    //   mode: 'trails-sql',
+    //   dialect: 'mssql',
+    //   lineNumbers: false,
+    // }
+    // let editor = this.editor = new CodeEditorWrapper( {
+    //   factory: options.factory,
+    //   model: options.context.model,
+    //   config: config as Partial<CodeEditor.IConfig>
+    // });
+
+    let editor = this.editor = new EditorWidget({
       factory: options.factory,
-      model: options.context.model,
-      config: config as Partial<CodeEditor.IConfig>
+      model: options.context.model
     });
 
     let toolbar = this.buildToolbar();
@@ -92,7 +100,7 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     this._onTitleChanged();
   }
 
-  readonly editor: CodeEditorWrapper;
+  readonly editor: EditorWidget;
   // readonly editor: EditorWidget;
   // readonly _overview: Overview;
   readonly _context: DocumentRegistry.Context;
@@ -163,7 +171,8 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     const editor = this.editor;
     const path = this._context.path;
 
-    editor.model.mimeType = this._mimeTypeService.getMimeTypeByFilePath(path);
+    // editor.model.mimeType = this._mimeTypeService.getMimeTypeByFilePath(path);
+    editor.model.mimeType = 'text/x-trails'; 
     this.title.label = PathExt.basename(path.split(':').pop()!);
   }
 

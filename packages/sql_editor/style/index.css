@@ -3,6 +3,38 @@
 :root {
 }
 
+.decorator {
+  background: #f0f0f0;
+  /*background-color: light-blue;*/
+}
+
+span.cm-annotation {
+  color: green;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+span.cm-block {
+  color:green;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
+span.cm-identifier {
+  font-weight: bold;
+}
+
+span.cm-desc {
+  font-style: italic;
+}
+
+
+span.cm-error {
+  color: #FE4D4D;
+  font-weight: bold;
+  text-decoration: underline;
+}
+
 .sql-icon {
   margin-top: 5px;
 }
