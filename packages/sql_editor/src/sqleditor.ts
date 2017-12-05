@@ -37,9 +37,9 @@ import {
 } from './editor';
 
 
-// import {
-//   Overview
-// } from './overview';
+import {
+  Overview
+} from './overview';
 
 // import * as d3 from 'd3';
 
@@ -64,26 +64,16 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     let context = this._context = options.context;
     context.model.mimeType = 'text/x-trails';
 
-    // let config = {
-    //   mode: 'trails-sql',
-    //   dialect: 'mssql',
-    //   lineNumbers: false,
-    // }
-    // let editor = this.editor = new CodeEditorWrapper( {
-    //   factory: options.factory,
-    //   model: options.context.model,
-    //   config: config as Partial<CodeEditor.IConfig>
-    // });
-
     let editor = this.editor = new EditorWidget({
       factory: options.factory,
       model: options.context.model
     });
 
+    let overview = this._overview = new Overview();
     let toolbar = this.buildToolbar();
     let layout = this.layout = new PanelLayout();
     layout.addWidget(toolbar);
-    // layout.addWidget(overview);
+    layout.addWidget(overview);
     layout.addWidget(editor);
 
     this._mimeTypeService = options.mimeTypeService;
@@ -92,17 +82,16 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     context.ready.then(() => { this._onContextReady(); });
     this.onPathChanged();
 
-    // let overview = this._overview = new Overview();
-
-    // editor.on('structure', (data:any) => overview.bookmarks(data) );
-    // editor.on('structure.update', () => overview.update() );
+    editor.on('structure', (data:any) => {
+      overview.bookmarks(data)  ;
+    });
+    editor.on('structure.update', () => overview.update() );
 
     this._onTitleChanged();
   }
 
   readonly editor: EditorWidget;
-  // readonly editor: EditorWidget;
-  // readonly _overview: Overview;
+  readonly _overview: Overview;
   readonly _context: DocumentRegistry.Context;
   private _mimeTypeService: IEditorMimeTypeService;
   private _ready = new PromiseDelegate<void>();
@@ -172,7 +161,7 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     const path = this._context.path;
 
     // editor.model.mimeType = this._mimeTypeService.getMimeTypeByFilePath(path);
-    editor.model.mimeType = 'text/x-trails'; 
+    editor.model.mimeType = 'text/x-trails';
     this.title.label = PathExt.basename(path.split(':').pop()!);
   }
 
@@ -187,16 +176,16 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     return toolbar;
   }
 
-  // private createOverviewButton(): ToolbarToggleButton {
-  //   return new ToolbarToggleButton({
-  //     className: TOOLBAR_OVERVIEW_CLASS,
-  //     onToggle: (state) => {
-  //       console.log('flip overview', state);
-  //       if (state) this._overview.hide()
-  //       else this._overview.show();
-  //     }
-  //   });
-  // }
+  private createOverviewButton(): ToolbarToggleButton {
+    return new ToolbarToggleButton({
+      className: TOOLBAR_OVERVIEW_CLASS,
+      onToggle: (state) => {
+        console.log('flip overview', state);
+        if (state) this._overview.hide()
+        else this._overview.show();
+      }
+    });
+  }
 
   private createSaveButton(): ToolbarButton {
     return new ToolbarButton({
