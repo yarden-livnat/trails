@@ -41,8 +41,6 @@ import {
   Overview
 } from './overview';
 
-// import * as d3 from 'd3';
-
 const DIRTY_CLASS = 'jp-mod-dirty';
 
 const SQL_PANEL_CLASS = 'sql-panel';
@@ -169,9 +167,8 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     let toolbar = new Toolbar();
     toolbar.addClass(SQL_PANEL_TOOLBAR_CLASS);
 
-    // toolbar.addItem('overview', this.createOverviewButton());
+    toolbar.addItem('overview', this.createOverviewButton());
     toolbar.addItem('table', this.createTableButton());
-    toolbar.addItem('save', this.createSaveButton());
 
     return toolbar;
   }
@@ -180,21 +177,12 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     return new ToolbarToggleButton({
       className: TOOLBAR_OVERVIEW_CLASS,
       onToggle: (state) => {
-        console.log('flip overview', state);
         if (state) this._overview.hide()
         else this._overview.show();
       }
     });
   }
 
-  private createSaveButton(): ToolbarButton {
-    return new ToolbarButton({
-      className: TOOLBAR_SAVE_CLASS,
-      onClick: () => {
-        console.log('save file');
-      }
-    });
-  }
 
   private createTableButton(): ToolbarToggleButton {
     return new ToolbarToggleButton({
@@ -213,7 +201,6 @@ class ToolbarToggleButton extends ToolbarButton {
     super({
       ...options,
       onClick: () => {
-        console.log('toggle');
         this.toggle();
       }
     });
