@@ -49,9 +49,17 @@ class EditorWidget extends CodeEditorWrapper {
     this.addClass(EDITOR_CLASS);
   }
 
+  getOption(key: string) : object {
+    let cm = this.editor as CodeMirror;
+    return cm.getOption(key);
+  }
+
+  setOption(key: string, value: object): void {
+    let cm = this.editor as CodeMirror;
+    cm.setOption(key, value);
+  }
+
   on(type, cb: (data?:any) => void) {
     CodeMirror.on(this.editor['editor'], type, (cm: CodeMirror.Editor, data?:any) => cb(data));
   }
-
-
 }

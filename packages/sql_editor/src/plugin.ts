@@ -11,8 +11,16 @@ import {
 } from '@jupyterlab/codeeditor';
 
 import {
+  Kernel
+} from '@jupyterlab/services';
+
+import {
   ReadonlyJSONObject
 } from '@phosphor/coreutils'
+
+import {
+  ITrails, Trails
+} from '@trails/trails';
 
 import {
   SQLEditor
@@ -40,7 +48,7 @@ const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
   id: '@trails/sqleditor:plugin',
   provides: ISQLEditorTracker,
-  requires: [ICommandPalette, ILayoutRestorer, IEditorServices],
+  requires: [ICommandPalette, ILayoutRestorer, IEditorServices, ITrails],
   autoStart: true
 };
 
@@ -51,7 +59,7 @@ export default plugin;
 /**
  * Activate the Test widget extension.
  */
-function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer, editorServices: IEditorServices): ISQLEditorTracker {
+function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer, editorServices: IEditorServices, trails:ITrails): ISQLEditorTracker {
   const id = plugin.id;
   const namespace = 'Trails';
   const factory = new SQLEditorFactory({
@@ -90,6 +98,17 @@ function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRe
       widget.title.iconClass = types[0].iconClass;
       widget.title.iconLabel = types[0].iconLabel;
     }
+
+    let client: Trails.IClient = {
+      type: 'TrailsEditor',
+      changeKernel(options: Kernel.IModel): void {
+        let editor:SQLEditor = widget as SQLEditor;
+        console.log('Trails: change kernel',options, 'for new widget ', widget);
+        editor.session.changeKernel(options);
+      }
+    }
+    trails.register(client);
+
   });
 
   let command = "trails:sql-editor";

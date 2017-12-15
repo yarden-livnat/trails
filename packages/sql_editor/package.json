@@ -31,7 +31,8 @@
     "@phosphor/widgets": "^1.5.0",
     "@types/d3": "^4.11.0",
     "d3": "^4.11.0",
-    "d3-component": "^3.0.0"
+    "d3-component": "^3.0.0",
+    "@trails/trails": "0.1.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

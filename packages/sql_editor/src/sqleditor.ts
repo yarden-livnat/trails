@@ -1,5 +1,5 @@
 import {
-  Toolbar, ToolbarButton
+  Toolbar, ToolbarButton, IClientSession
 } from '@jupyterlab/apputils';
 
 import {
@@ -23,9 +23,7 @@ import {
 } from '@phosphor/widgets';
 
 import {
-  // CodeEditor, IEditorServices,
   IEditorMimeTypeService
-  // , CodeEditorWrapper
 } from '@jupyterlab/codeeditor';
 
 import {
@@ -67,6 +65,10 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
       model: options.context.model
     });
 
+    let extraKeys = editor.getOption('extraKeys') || {};
+    extraKeys['Shift-Enter'] =  () => { this.exec(); };
+    editor.setOption('extraKeys', extraKeys);
+
     let overview = this._overview = new Overview();
     let toolbar = this.buildToolbar();
     let layout = this.layout = new PanelLayout();
@@ -102,9 +104,18 @@ class SQLEditor extends Widget implements DocumentRegistry.IReadyWidget, IDispos
     return this._ready.promise;
   }
 
+  get session(): IClientSession {
+    return this._context ? this._context.session : null;
+  }
+
   dispose() {
     super.dispose();
   }
+
+  exec() {
+    console.log('exec');
+  }
+
 
   private _onTitleChanged(): void {
     this.title.label = PathExt.basename(this._context.path);
