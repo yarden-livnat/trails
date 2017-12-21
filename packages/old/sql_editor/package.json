@@ -1,5 +1,5 @@
 {
-  "name": "@trails/sqleditor",
+  "name": "@trails/sql_editor",
   "version": "0.3.0",
   "description": "SQL view",
   "main": "lib/index.js",

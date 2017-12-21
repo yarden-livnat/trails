@@ -1,0 +1,36 @@
+
+.trails_overview {
+  background-color: white;
+}
+
+.trails_overview .itemsList {
+  list-style-type: none;
+  padding-left: 0px;
+  font-size: var(--jp-ui-font-size1);
+}
+
+.trails_overview .itemsList .item {
+  color: var(--jp-ui-font-color1);
+  overflow: hidden;
+}
+
+.trails_overview .itemsList .item .icon {
+  width: 20px;
+  float: left;
+}
+
+.trails_overview .itemsList .item .name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  float: left;
+}
+
+.fold {
+  color: var(--jp-ui-font-color3);
+  font-style: italic;
+}
+
+.folded {
+  color: var(--jp-ui-font-color3);
+}

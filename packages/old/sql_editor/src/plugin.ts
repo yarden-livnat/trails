@@ -103,7 +103,6 @@ function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRe
       type: 'TrailsEditor',
       changeKernel(options: Kernel.IModel): void {
         let editor:SQLEditor = widget as SQLEditor;
-        console.log('Trails: change kernel',options, 'for new widget ', widget);
         editor.session.changeKernel(options);
       }
     }
