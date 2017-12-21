@@ -44,12 +44,11 @@ function onFold(cm, from, to, type) {
   let bookmark = cm.findMarks(Pos(from.line,0), Pos(from.line+1, 0)).find( mark => mark._structure);
   if (bookmark) {
     bookmark.fold = op;
-    bookmark.hidden = op;
     report = true;
   }
   for (let mark of cm.findMarks(Pos(from.line+1, 0), to)) {
     if (mark._structure && !mark._fold ) {
-      mark.hidden = op;
+      mark.folded = op;
       report = true;
     }
   };

@@ -7,14 +7,14 @@
   list-style-type: none;
   padding-left: 0px;
   font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color1);
 }
 
 .trails_overview .itemsList .item {
-  color: var(--jp-ui-font-color1);
   overflow: hidden;
 }
 
-.trails_overview .itemsList .item .icon {
+.trails_overview .itemsList .item i {
   width: 20px;
   float: left;
 }
@@ -26,11 +26,11 @@
   float: left;
 }
 
-.fold {
-  color: var(--jp-ui-font-color3);
+.tr-overview-fold {
+  color: var(--jp-ui-font-color2);
   font-style: italic;
 }
 
-.folded {
+.tr-overview-folded {
   color: var(--jp-ui-font-color3);
 }

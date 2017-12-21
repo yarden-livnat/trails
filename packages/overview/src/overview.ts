@@ -12,7 +12,7 @@ import {
 const OVERVIEW_CLASS = 'trails_overview';
 
 const ICONS = {
-  block: 'fa fa-angle-right',
+  block: 'fa fa-square-o',
   table: 'fa fa-table',
   use: 'fa fa-database',
   report: 'fa fa-book',
@@ -21,6 +21,7 @@ const ICONS = {
 };
 
 function icon(type) {
+  console.log('icon:', type, ICONS[type] || ICONS['unknown']);
   return ICONS[type] || ICONS['unknown'];
 }
 
@@ -28,17 +29,15 @@ let renderItem = component('div', 'item')
   .create((s, d) => {
     s.append('i').attr('class', 'icon');
     s.append('div').attr('class', 'name');
-    s.append('div').attr('class', 'pos');
   })
   .render( (s, d) => {
       console.log(d);
-      s.classed('fold', d.fold)
-       .classed('folded', d.hidden)
+      s.classed('tr-overview-fold', d.fold)
+       .classed('tr-overview-folded', d.folded)
        .style('padding-left', `${d.level*10}px`);
 
-      s.select('.icon').classed(icon(d.type.toLowerCase()), true);
+      s.select('i').attr('class', icon(d.type.toLowerCase()));
       s.select('.name').text(d => d.name);
-      s.select('.pos').text( d => d.pos);
   });
 
 export
@@ -65,7 +64,7 @@ class Overview extends Widget {
 
   widgetChanged(tracker:ISQLEditorTracker, widget:SQLEditor) {
     console.log('overview: widgetChanged', widget);
-    this._structure = widget && widget.structure || null;
+    this._structure = widget && widget.structure || new Structure();
     this.render();
   }
 
@@ -79,21 +78,9 @@ class Overview extends Widget {
   render() {
     d3.select(this.node).select('.itemsList')
       .call(renderItem, this._structure.items);
-
-    // let items = d3.select(this.node).select('.itemsList')
-    //   .selectAll('.item')
-    //   .data(this._structure.items);
-    //
-    // items.enter().append('div')
-    //   .attr('class', 'item')
-    //   .merge(items)
-    //   .callRenderIte
-    //   .text(d => `${icon(d.type)} ${d.name} ${d.pos}`)
-    //
-    // items.exit().remove();
   }
 
 
-  private _structure : Structure = null;
+  private _structure : Structure = new Structure();
   private _tracker: ISQLEditorTracker;
 }

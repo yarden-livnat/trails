@@ -10,7 +10,7 @@ let annotations = [
   {token: 'annotation', pattern: /^@info(?=\s|$)/i},
   {token: 'annotation', pattern: /^@debug(?=s\|$)/i},
   {token: 'annotation', name: 'Use', pattern: /^@use(?=\s|$)/i},
-  {token: 'annotation', name: 'Procdure', pattern: /^@procedure|@function(?= |$)/i},
+  {token: 'annotation', name: 'Procdeure', pattern: /^@procedure|@function(?= |$)/i},
   {token: 'unknown',    pattern: /^@\w*/},
   {token: 'identifier', pattern: /\S+/},
   {token: 'text',       pattern: /\S+/}
@@ -22,9 +22,9 @@ let decorators = new Map(
    ['@table', 'Table'],
    ['@report', 'Report'],
    ['@use', 'Use'],
-   ['@proc', 'Procdure'],
-   ['@procedure', 'Procdure'],
-   ['@fucntion', 'Procdure']
+   ['@proc', 'Procedure'],
+   ['@procedure', 'Procedure'],
+   ['@fucntion', 'Procedure']
  ]);
 
  export
