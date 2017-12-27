@@ -49,3 +49,7 @@ span.cm-identifier {
 span.cm-desc {
   font-style: italic;
 }
+
+.trails-SQLEditor-highlight {
+  background: yellow;
+}

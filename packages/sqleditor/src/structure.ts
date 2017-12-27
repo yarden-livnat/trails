@@ -6,7 +6,7 @@ interface IStructureItem {
   level?: number,
   pos?: number,
   fold?: boolean,
-  hidden?: boolean
+  folded?: boolean
 }
 
 export

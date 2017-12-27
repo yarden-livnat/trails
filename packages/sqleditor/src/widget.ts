@@ -39,6 +39,11 @@ import './addons/mode';
 import './addons/fold';
 import './addons/structure';
 
+
+import {
+  Bookmark
+} from './addons/bookmark';
+
 /**
  * The class name added to a dirty widget.
  */
@@ -103,6 +108,26 @@ class SQLEditor extends FileEditor {
     console.log('exec');
   }
 
+  public highlight(item: IStructureItem, state:boolean) {
+    let editor = this.editor['editor'];
+    let bookmark = item as Bookmark;
+    let line = (bookmark.find() as any).from.line;
+    if (state) editor.addLineClass(line, 'background', 'trails-SQLEditor-highlight');
+    else  editor.removeLineClass(line, 'background', 'trails-SQLEditor-highlight');
+  }
+
+  public revile(item: IStructureItem) {
+    let editor = this.editor['editor'];
+    let bookmark = item as Bookmark;
+    editor.scrollIntoView(bookmark.find());
+  }
+
+  fold(item: IStructureItem) {
+    let editor = this.editor['editor'];
+    let bookmark = item as Bookmark;
+    let at = (bookmark.find() as any).from;
+    editor.foldCode(at);
+  }
 
   structureChanged = new Signal<this, Structure>(this);
 

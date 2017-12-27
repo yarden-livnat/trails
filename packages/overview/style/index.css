@@ -19,6 +19,10 @@
   float: left;
 }
 
+.trails_overview .itemsList .item i fa:hover {
+  font-weight: bold;
+}
+
 .trails_overview .itemsList .item .name {
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -26,6 +30,9 @@
   float: left;
 }
 
+.trails_overview .itemsList .item .name:hover {
+  font-weight: bold;
+}
 .tr-overview-fold {
   color: var(--jp-ui-font-color2);
   font-style: italic;
