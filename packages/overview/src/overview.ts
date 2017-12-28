@@ -24,23 +24,6 @@ function icon(type) {
   return ICONS[type] || ICONS['unknown'];
 }
 
-let renderItem = component('div', 'item')
-  .create((s, d) => {
-    s.append('i').attr('class', 'icon');
-    s.append('div').attr('class', 'name');
-  })
-  .render( (s, d) => {
-      s.classed('tr-overview-fold', d.fold)
-       .classed('tr-overview-folded', d.folded)
-       .style('padding-left', `${d.level*10}px`);
-
-      s.select('i').attr('class', icon(d.type.toLowerCase()));
-      s.select('.name').text(d => d.name)
-        .on('mouseenter', d => this.highlight(d.name, true))
-        .on('mouseleave', d => this.highlight(d.name, false))
-        .on('click', d => this.select(d.name));
-  });
-
 export
 class Overview extends Widget {
   constructor(tracker: ISQLEditorTracker) {
@@ -98,20 +81,20 @@ class Overview extends Widget {
     let merged = enter.merge(items)
       .classed('tr-overview-fold', d => d.fold)
       .classed('tr-overview-folded', d => d.folded)
-      .style('padding-left', d => `${d.level*10}px`);
+      .style('padding-left', d => {
+        // console.log(d.name, d.level);
+        return `${d.level*20}px`;
+      });
 
     items.exit().remove();
-      // .call(renderItem, this._structure.items);
   }
 
 
   highlight(item, state) {
-    console.log('overview.highlight', item, state);
     this._current.highlight(item, state);
   }
 
   fold(item) {
-    console.log('fold',item.name);
     this._current.fold(item);
   }
 

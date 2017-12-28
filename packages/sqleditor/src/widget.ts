@@ -72,7 +72,11 @@ let config = {
   extraKeys: {
     'Cmd-0': function(cm){ cm.foldCode(cm.getCursor()); },
     'Cmd-/': 'toggleComment',
-    'Ctrl-/': 'toggleComment'
+    'Ctrl-/': 'toggleComment',
+    Tab: function(cm) {
+      var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+      cm.replaceSelection(spaces);
+      }
   },
 }
 

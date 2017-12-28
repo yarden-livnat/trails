@@ -18,6 +18,10 @@ import {
 } from '@jupyterlab/coreutils';
 
 import {
+  IEditorTracker
+} from '@jupyterlab/fileeditor';
+
+import {
   SQLEditor, SQLEditorFactory, ISQLEditorTracker
 } from '@trails/sqleditor';
 
@@ -73,7 +77,7 @@ namespace CommandIDs {
 const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
   id: '@trails/sqleditor-extension:plugin',
-  requires: [ILayoutRestorer, IEditorServices, ISettingRegistry],
+  requires: [ILayoutRestorer, IEditorServices, ISettingRegistry, IEditorTracker],
   optional: [ILauncher],
   provides: ISQLEditorTracker,
   autoStart: true
@@ -89,7 +93,7 @@ export default plugin;
 /**
  * Activate the editor tracker plugin.
  */
-function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IEditorServices, settingRegistry: ISettingRegistry, launcher: ILauncher | null): ISQLEditorTracker {
+function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IEditorServices, settingRegistry: ISettingRegistry, editorTracker: IEditorTracker, launcher: ILauncher | null): ISQLEditorTracker {
   const id = plugin.id;
   const namespace = 'trails';
   const factory = new SQLEditorFactory({
@@ -163,6 +167,8 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IE
     widget.context.pathChanged.connect(() => { tracker.save(widget); });
     tracker.add(widget);
     updateWidget(widget);
+
+    editorTracker.inject(widget);
   });
 
   app.docRegistry.addFileType({
