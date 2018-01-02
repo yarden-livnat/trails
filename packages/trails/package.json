@@ -1,7 +1,7 @@
 {
-  "name": "@trails/sqleditor",
-  "version": "0.3.0",
-  "description": "SQL view",
+  "name": "@trails/trails",
+  "version": "0.1.0",
+  "description": "trails management",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "directories": {
@@ -24,14 +24,9 @@
     "@jupyterlab/application": "^0.12.0",
     "@jupyterlab/apputils": "^0.12.4",
     "@jupyterlab/coreutils": "^0.12.0",
-    "@jupyterlab/docregistry": "^0.12.0",
-    "@jupyterlab/fileeditor": "0.12.0",
-    "@phosphor/coreutils": "^1.3.0",
-    "@phosphor/disposable": "^1.1.2",
-    "@phosphor/widgets": "^1.5.0",
-    "@types/d3": "^4.11.0",
-    "d3": "^4.11.0",
-    "d3-component": "^3.0.0"
+    "@jupyterlab/notebook": "^0.12.0",
+    "@jupyterlab/services": "^0.51.0",
+    "@phosphor/coreutils": "^1.3.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

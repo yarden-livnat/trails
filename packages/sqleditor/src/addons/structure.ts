@@ -40,16 +40,15 @@ function onChange(cm, change) {
 
 function onFold(cm, from, to, type) {
   let report = false;
-  let fold = type == 'fold';
+  let op = type == 'fold';
   let bookmark = cm.findMarks(Pos(from.line,0), Pos(from.line+1, 0)).find( mark => mark._structure);
   if (bookmark) {
-    bookmark._fold = fold;
-    bookmark._fold_explicit = fold;
+    bookmark.fold = op;
     report = true;
   }
   for (let mark of cm.findMarks(Pos(from.line+1, 0), to)) {
-    if (mark._structure && !mark._fold_explicit ) {
-      mark._fold = fold;
+    if (mark._structure && !mark._fold ) {
+      mark.folded = op;
       report = true;
     }
   };
@@ -125,6 +124,7 @@ function findAnnotation(cm, line) {
 
 function updateAllBookmarks(cm, start, end) {
   let t0 = performance.now();
+  let tab = cm.getOption("indentUnit");
   let bookmark, bookmarks = [];
 
   for (bookmark of cm.state.structure.bookmarks)
@@ -138,11 +138,14 @@ function updateAllBookmarks(cm, start, end) {
     bookmark._structure = true;
     bookmark.type = info.type;
     bookmark.name = info.name;
+    bookmark.pos = info.pos.ch;
+    bookmark.level = (info.pos.ch+1)/tab;
+    console.log('bookmark:', bookmark.name, bookmark.pos, bookmark.level);
 
     bookmarks.push(bookmark);
   }
   let t1 = performance.now();
-  console.log('update bookmarks in ', (t1-t0), ' msec')
+  console.log('update bookmarks in ', (t1-t0), ' msec');
   cm.state.structure.bookmarks = bookmarks;
   CodeMirror.signal(cm, "structure", cm, bookmarks);
 }
