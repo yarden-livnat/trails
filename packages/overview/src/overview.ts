@@ -55,7 +55,7 @@ class Overview extends Widget {
   }
 
   structureChanged(widget:SQLEditor, structure:Structure) {
-    console.log('overviw: structure', widget, structure, widget == this._current);
+    // console.log('overviw: structure', widget, structure, widget == this._current);
     if (widget == this._current) {
       this._structure = structure;
       this.render();
