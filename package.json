@@ -1,6 +1,6 @@
 {
 	"name": "trails",
-	"version": "0.2.0",
+	"version": "0.1.0",
 	"description": "trails",
 	"scripts": {
 		"install": "lerna bootstrap",
@@ -21,8 +21,7 @@
 		"test:firefox": "lerna run test:firefox --stream",
 		"test:ie": "lerna run test:ie --concurrency 1 --stream",
 
-		"watch": "lerna run --parallel watch",
-		"link": "lerna run link"
+		"watch": "lerna run --parallel watch && jupyter lab --watch"
 
 	},
 	"repository": {

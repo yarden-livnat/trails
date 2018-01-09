@@ -1,0 +1,74 @@
+/*@import url('~codemirror/lib/codemirror.css');*/
+
+:root {
+}
+
+.trails-sql {
+  display: flex;
+  flex-direction: row;
+  font-family: var(--jp-ui-font-family);
+  background: var(--jp-layout-color1);
+}
+
+.trails-sql .p-SplitPanel {
+  flex: 1 1 auto;
+}
+
+
+.trails-sql-overview {
+  /*flex: 1 1 auto;*/
+  max-height: 200px;
+}
+
+.trails-sql-overview {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+
+.panel {
+  display: flex;
+  flex-direction: column;
+  margin: 10px;
+}
+
+.panel-header {
+  text-transform:capitalize;
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 600;
+  letter-spacing: 1px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.panel-body {
+  overflow: auto;
+}
+
+.panel-item {
+  color: var(--jp-ui-font-color1);
+  font-size: var(--jp-ui-font-size1);
+  font-weight: 600;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+.panel-item.fold {
+  color: var(--jp-ui-font-color3);
+}
+
+
+.trails-editor {
+  display: flex;
+  flex: 1 1 auto;
+}
+
+.trails-editor .CodeMirror {
+  flex: 1 1 auto;
+  height: auto;
+  /*border: 1px solid #eee;*/
+}
