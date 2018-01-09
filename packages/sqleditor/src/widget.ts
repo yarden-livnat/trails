@@ -66,8 +66,8 @@ let config = {
   scrollbarStyle: 'native',
   // // fixedGutter: true,
   foldGutter: true,
-  // gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
-  gutters: ["CodeMirror-foldgutter"],
+  gutters: ["CodeMirror-linenumbers", "CodeMirror-foldgutter"],
+  // gutters: ["CodeMirror-foldgutter"],
   structure: true,
   extraKeys: {
     'Cmd-0': function(cm){ cm.foldCode(cm.getCursor()); },
@@ -123,7 +123,11 @@ class SQLEditor extends FileEditor {
   public revile(item: IStructureItem) {
     let editor = this.editor['editor'];
     let bookmark = item as Bookmark;
-    editor.scrollIntoView(bookmark.find());
+    let range = bookmark.find();
+
+    range.to.line = this.find_next(bookmark, editor) || editor.lastLine();
+
+    editor.scrollIntoView(range);
   }
 
   fold(item: IStructureItem) {
@@ -136,6 +140,23 @@ class SQLEditor extends FileEditor {
   structureChanged = new Signal<this, Structure>(this);
 
   readonly structure: Structure = new Structure;
+
+  find_next(bookmark, editor) {
+    let bookmarks = editor.state && editor.state.structure && editor.state.structure.bookmarks;
+    if (!bookmarks) return null;
+
+    let base = bookmark.level;
+    let inBlock = bookmark.type == 'Block';
+
+    for (let i = bookmarks.indexOf(bookmark)+1; i < bookmarks.length; i++) {
+      let next = bookmarks[i];
+      if (next.level > base) continue;
+      if (next.level < base || !inBlock || next.type == 'Block') {
+        return next.find().from.line;
+      }
+    }
+    return null;
+  }
 }
 
 export

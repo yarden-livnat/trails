@@ -140,7 +140,7 @@ function updateAllBookmarks(cm, start, end) {
     bookmark.name = info.name;
     bookmark.pos = info.pos.ch;
     bookmark.level = (info.pos.ch+1)/tab;
-    console.log('bookmark:', bookmark.name, bookmark.pos, bookmark.level);
+    // console.log('bookmark:', bookmark.name, bookmark.pos, bookmark.level);
 
     bookmarks.push(bookmark);
   }

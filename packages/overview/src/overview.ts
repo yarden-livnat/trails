@@ -43,19 +43,19 @@ class Overview extends Widget {
   }
 
   widgetAdded(tracker:ISQLEditorTracker, widget:SQLEditor) {
-    console.log('overview: widget added', widget);
+    console.log('overview: widget added', widget.context.path);
     widget.structureChanged.connect(this.structureChanged, this);
   }
 
   widgetChanged(tracker:ISQLEditorTracker, widget:SQLEditor) {
-    console.log('overview: widgetChanged', widget);
+    console.log('overview: widgetChanged', widget.context.path);
     this._current = widget;
     this._structure = widget && widget.structure || new Structure();
     this.render();
   }
 
   structureChanged(widget:SQLEditor, structure:Structure) {
-    console.log('overviw: structure', widget, structure, widget == this._current);
+    // console.log('overviw: structure', widget, structure, widget == this._current);
     if (widget == this._current) {
       this._structure = structure;
       this.render();
@@ -86,7 +86,7 @@ class Overview extends Widget {
       .classed('tr-overview-folded', d => d.folded)
       .style('padding-left', d => {
         // console.log(d.name, d.level);
-        return `${d.level*20}px`;
+        return `${(d.level-1)*20}px`;
       });
 
     items.exit().remove();

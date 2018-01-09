@@ -12,6 +12,7 @@
 
 .trails_overview .itemsList .item {
   overflow: hidden;
+  margin-left: 5px;
 }
 
 .trails_overview .itemsList .item i {
