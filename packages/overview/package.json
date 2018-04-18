@@ -17,9 +17,11 @@
     "lib": "lib/"
   },
   "scripts": {
+    "postinstall": "npm link ../sqleditor",
     "build": "tsc",
     "clean": "rimraf lib",
     "watch": "tsc -w",
+    "link": "jupyter labextension link --no-build",
     "prepack": "npm run clean && npm run build"
   },
   "repository": {
