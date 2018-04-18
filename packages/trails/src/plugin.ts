@@ -3,8 +3,12 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  Dialog, ICommandPalette, IMainMenu, showDialog
+  Dialog, ICommandPalette, showDialog
 } from '@jupyterlab/apputils';
+
+import {
+    IMainMenu
+} from '@jupyterlab/mainmenu';
 
 import {
   DocumentRegistry

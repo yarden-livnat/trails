@@ -4,7 +4,7 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  IMainMenu, InstanceTracker, ToolbarButton
+  InstanceTracker, ToolbarButton
 } from '@jupyterlab/apputils';
 
 import {

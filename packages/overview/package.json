@@ -1,6 +1,6 @@
 {
   "name": "@trails/overview",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Trails - Overview Widget ",
   "license": "BSD-3-Clause",
   "author": "Yarden Livnat",
@@ -22,13 +22,12 @@
     "watch": "tsc -w"
   },
   "dependencies": {
-    "@jupyterlab/application": "^0.12.0",
-    "@jupyterlab/apputils": "^0.12.4",
+    "@jupyterlab/application": "^0.16.2",
+    "@jupyterlab/apputils": "^0.16.3",
     "@phosphor/widgets": "^1.5.0",
-    "@types/d3": "^4.11.0",
-    "d3": "^4.11.0",
-    "d3-component": "^3.0.0",
-    "@trails/sqleditor": "^0.1.0"
+    "@types/d3": "^5.0.0",
+    "d3": "^5.1.0",
+    "d3-component": "^3.1.0"
   },
   "devDependencies": {
     "rimraf": "~2.6.2",
