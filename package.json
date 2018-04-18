@@ -5,19 +5,9 @@
 	"scripts": {
 		"install": "lerna bootstrap",
 		"build": "lerna run build",
-		"build:src": "lerna run build --scope \"@trails/!(test-)*\"",
-		"build:test": "lerna run build:test",
-		"clean": "lerna run clean",
-		"clean:slate": "git clean -dfx && npm install && npm run build",
-		"clean:tests": "lerna run clean --scope \"@trails/test-*\"",
-		"docs": "lerna run docs",
-		"publish": "npm run clean:slate && lerna publish --force-publish=* -m \"Publish\"",
-		"test": "cd test && npm test",
-		"test:chrome": "lerna run test:chrome --stream",
-		"test:firefox": "lerna run test:firefox --stream",
-		"test:ie": "lerna run test:ie --concurrency 1 --stream",
-		"watch": "lerna run --parallel watch",
-		"link": "lerna run link"
+		"link": "lerna exec -- jupyter labextension link .",
+		"publish": "lerna publish --git-remote yarden-livnat",
+		"watch": "lerna run --parallel watch"
 	},
 	"repository": {
 		"type": "git",

@@ -19,7 +19,12 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf lib",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "prepack": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yarden-livnat/trails.git"
   },
   "dependencies": {
     "@jupyterlab/application": "^0.16.2",
