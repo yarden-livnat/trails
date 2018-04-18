@@ -34,7 +34,7 @@
     "@jupyterlab/codeeditor": "^0.16.1",
     "@jupyterlab/coreutils": "^1.1.2",
     "@jupyterlab/fileeditor": "^0.16.2",
-    "@jupyterlab/launcher": "^0.16.2"
+
   },
   "devDependencies": {
     "rimraf": "~2.6.2",

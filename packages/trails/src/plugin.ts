@@ -74,9 +74,9 @@ const trails: JupyterLabPlugin<ITrails> = {
   provides: ITrails,
   requires: [ IMainMenu, ICommandPalette],
   autoStart: true
-}
+};
 
-function activateTrails(app: JupyterLab, mainMenu: IMainMenu, paletter: ICommandPalette): ITrails {
+function activateTrails(app: JupyterLab, mainMenu: IMainMenu, palette: ICommandPalette): ITrails {
   const services = app.serviceManager;
   const { commands } = app;
 

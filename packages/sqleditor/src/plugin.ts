@@ -21,14 +21,18 @@ import {
   IEditorTracker
 } from '@jupyterlab/fileeditor';
 
-import {
-  SQLEditor, SQLEditorFactory, ISQLEditorTracker
-} from '@trails/sqleditor';
 
 import {
-  ILauncher
+    ILauncher
 } from '@jupyterlab/launcher';
 
+import {
+    SQLEditor, SQLEditorFactory,
+} from './widget';
+
+import {
+    ISQLEditorTracker
+} from './tracker';
 
 /**
  * The class name for the text editor icon from the default theme.
