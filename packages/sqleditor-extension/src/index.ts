@@ -21,18 +21,14 @@ import {
   IEditorTracker
 } from '@jupyterlab/fileeditor';
 
+import {
+  SQLEditor, SQLEditorFactory, ISQLEditorTracker
+} from '@trails/sqleditor';
 
 import {
-    ILauncher
+  ILauncher
 } from '@jupyterlab/launcher';
 
-import {
-    SQLEditor, SQLEditorFactory,
-} from './widget';
-
-import {
-    ISQLEditorTracker
-} from './tracker';
 
 /**
  * The class name for the text editor icon from the default theme.
@@ -78,8 +74,7 @@ namespace CommandIDs {
 /**
  * The editor tracker extension.
  */
-export
-const sqleditor: JupyterLabPlugin<ISQLEditorTracker> = {
+const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
   id: '@trails/sqleditor-extension:plugin',
   requires: [ILayoutRestorer, IEditorServices, ISettingRegistry, IEditorTracker],
@@ -92,7 +87,7 @@ const sqleditor: JupyterLabPlugin<ISQLEditorTracker> = {
 /**
  * Export the plugins as default.
  */
-
+export default plugin;
 
 
 /**
