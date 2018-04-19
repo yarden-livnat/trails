@@ -17,7 +17,8 @@
   "scripts": {
     "build": "tsc",
     "clean": "rimraf lib",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "link": "jupyter labextension link --no-build"
   },
   "repository": {
     "type": "git",

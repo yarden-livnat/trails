@@ -5,7 +5,7 @@
 	"scripts": {
 		"install": "lerna bootstrap",
 		"build": "lerna run build",
-		"link": "lerna exec -- jupyter labextension link .",
+		"link": "lerna run link; jupyter lab build",
 		"publish": "lerna publish --git-remote yarden-livnat",
 		"watch": "lerna run --parallel watch"
 	},
