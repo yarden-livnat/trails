@@ -78,7 +78,8 @@ namespace CommandIDs {
 /**
  * The editor tracker extension.
  */
-const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
+export
+const sqleditor: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
   id: '@trails/sqleditor-extension:plugin',
   requires: [ILayoutRestorer, IEditorServices, ISettingRegistry, IEditorTracker],
@@ -91,7 +92,7 @@ const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
 /**
  * Export the plugins as default.
  */
-export default plugin;
+
 
 
 /**
