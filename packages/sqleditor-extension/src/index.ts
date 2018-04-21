@@ -6,12 +6,16 @@ import {
 } from '@jupyterlab/application';
 
 import {
-  InstanceTracker
+  ICommandPalette, InstanceTracker
 } from '@jupyterlab/apputils';
 
 import {
   IEditorServices
 } from '@jupyterlab/codeeditor';
+
+import {
+  IConsoleTracker
+} from '@jupyterlab/console';
 
 import {
   ISettingRegistry, MarkdownCodeBlocks, PathExt
@@ -20,6 +24,17 @@ import {
 import {
   IEditorTracker
 } from '@jupyterlab/fileeditor';
+
+import {
+  IFileBrowserFactory
+} from '@jupyterlab/filebrowser';
+
+import {
+  // IFileMenu,
+  IMainMenu,
+  // IRunMenu
+} from '@jupyterlab/mainmenu';
+
 
 import {
   SQLEditor, SQLEditorFactory, ISQLEditorTracker
@@ -45,6 +60,9 @@ const FACTORY = 'SQLEditor';
  * The command IDs used by the sqleditor plugin.
  */
 namespace CommandIDs {
+  export
+  const createNew = 'sqleditor:create-new';
+
   export
   const lineNumbers = 'sqleditor:toggle-line-numbers';
 
@@ -77,8 +95,8 @@ namespace CommandIDs {
 const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
   id: '@trails/sqleditor-extension:plugin',
-  requires: [ILayoutRestorer, IEditorServices, ISettingRegistry, IEditorTracker],
-  optional: [ILauncher],
+  requires: [IConsoleTracker, IEditorServices, IFileBrowserFactory, ILayoutRestorer, ISettingRegistry, IEditorTracker],
+  optional: [ICommandPalette, ILauncher, IMainMenu],
   provides: ISQLEditorTracker,
   autoStart: true
 };
@@ -89,86 +107,16 @@ const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
  */
 export default plugin;
 
-
-/**
+  /**
  * Activate the editor tracker plugin.
  */
-function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IEditorServices, settingRegistry: ISettingRegistry, editorTracker: IEditorTracker, launcher: ILauncher | null): ISQLEditorTracker {
+function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServices: IEditorServices,
+                  browserFactory: IFileBrowserFactory, restorer: ILayoutRestorer, settingRegistry: ISettingRegistry,
+                  editorTracker: IEditorTracker,
+                  palette: ICommandPalette, launcher: ILauncher | null, menu: IMainMenu | null): ISQLEditorTracker {
+  console.log('sqleditor activated');
+  const id = plugin.id;
   const namespace = 'trails';
-  const factory = new SQLEditorFactory({
-    editorServices,
-    factoryOptions: { name: FACTORY, fileTypes: ['sql'], defaultFor: ['sql'] }
-  });
-  const { commands/*, restored */} = app;
-  const tracker = new InstanceTracker<SQLEditor>({ namespace });
-  const hasWidget = () => !!tracker.currentWidget;
-
-  // let {
-  //   lineNumbers, lineWrap, matchBrackets, autoClosingBrackets
-  // } = CodeEditor.defaultConfig;
-
-  // Handle state restoration.
-  restorer.restore(tracker, {
-    command: 'docmanager:open',
-    args: widget => ({ path: widget.context.path, factory: FACTORY }),
-    name: widget => widget.context.path
-  });
-
-  /**
-   * Update the setting values.
-   */
-  // function updateSettings(settings: ISettingRegistry.ISettings): void {
-  //   let cached = settings.get('lineNumbers').composite as boolean | null;
-  //   lineNumbers = cached === null ? lineNumbers : !!cached;
-  //   cached = settings.get('matchBrackets').composite as boolean | null;
-  //   matchBrackets = cached === null ? matchBrackets : !!cached;
-  //   cached = settings.get('autoClosingBrackets').composite as boolean | null;
-  //   autoClosingBrackets = cached === null ? autoClosingBrackets : !!cached;
-  //   cached = settings.get('lineWrap').composite as boolean | null;
-  //   lineWrap = cached === null ? lineWrap : !!cached;
-  // }
-
-  /**
-   * Update the settings of the current tracker instances.
-   */
-  // function updateTracker(): void {
-  //   tracker.forEach(widget => { updateWidget(widget); });
-  // }
-  //
-  // /**
-  //  * Update the settings of a widget.
-  //  */
-  // function updateWidget(widget: SQLEditor): void {
-  //   const editor = widget.editor;
-  //   editor.setOption('lineNumbers', lineNumbers);
-  //   editor.setOption('lineWrap', lineWrap);
-  //   editor.setOption('matchBrackets', matchBrackets);
-  //   editor.setOption('autoClosingBrackets', autoClosingBrackets);
-  // }
-
-  // Fetch the initial state of the settings.
-  // Promise.all([settingRegistry.load(id), restored]).then(([settings]) => {
-  //   updateSettings(settings);
-  //   updateTracker();
-  //   settings.changed.connect(() => {
-  //     updateSettings(settings);
-  //     updateTracker();
-  //   });
-  // }).catch((reason: Error) => {
-  //   console.error(reason.message);
-  //   updateTracker();
-  // });
-
-  factory.widgetCreated.connect((sender, widget) => {
-    widget.title.icon = EDITOR_ICON_CLASS;
-
-    // Notify the instance tracker if restore data needs to update.
-    widget.context.pathChanged.connect(() => { tracker.save(widget); });
-    tracker.add(widget);
-    // updateWidget(widget);
-
-    editorTracker.inject(widget);
-  });
 
   app.docRegistry.addFileType({
     name: 'sql',
@@ -179,99 +127,81 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IE
     fileFormat: 'text'
   });
 
+  const factory = new SQLEditorFactory({
+    editorServices,
+    factoryOptions: { name: FACTORY, fileTypes: ['sql'], defaultFor: ['sql'] }
+  });
+  const { commands, restored } = app;
+  const tracker = new InstanceTracker<SQLEditor>({ namespace });
+  const isEnabled = () => tracker.currentWidget !== null &&
+    tracker.currentWidget === app.shell.currentWidget;
+
+  // let config = { ...CodeEditor.defaultConfig };
+
+  // Handle state restoration.
+  restorer.restore(tracker, {
+    command: 'docmanager:open',
+    args: widget => ({ path: widget.context.path, ext: 'sql', factory: FACTORY }),
+    name: widget => widget.context.path
+  });
+
+  /**
+   * Update the setting values.
+   */
+
+  function updateSettings(settings: ISettingRegistry.ISettings): void {
+  //   let cached =
+  //     settings.get('editorConfig').composite as Partial<CodeEditor.IConfig>;
+  //   Object.keys(config).forEach((key: keyof CodeEditor.IConfig) => {
+  //     config[key] = (cached[key] === null || cached[key] === undefined) ?
+  //       CodeEditor.defaultConfig[key] : cached[key];
+  //   });
+  }
+
+  /**
+   * Update the settings of the current tracker instances.
+   */
+  function updateTracker(): void {
+    tracker.forEach(widget => { updateWidget(widget); });
+  }
+
+  /**
+   * Update the settings of a widget.
+   */
+  function updateWidget(widget: SQLEditor): void {
+    // const editor = widget.editor;
+    // Object.keys(config).forEach((key: keyof CodeEditor.IConfig) => {
+    //   editor.setOption(key, config[key]);
+    // });
+  }
+
+
+  // Fetch the initial state of the settings.
+  Promise.all([settingRegistry.load(id), restored]).then(([settings]) => {
+    updateSettings(settings);
+    updateTracker();
+    settings.changed.connect(() => {
+      updateSettings(settings);
+      updateTracker();
+    });
+  }).catch((reason: Error) => {
+    console.error(reason.message);
+    updateTracker();
+  });
+
+
+  factory.widgetCreated.connect((sender, widget) => {
+    widget.title.icon = EDITOR_ICON_CLASS;
+
+    // Notify the instance tracker if restore data needs to update.
+    widget.context.pathChanged.connect(() => { tracker.save(widget); });
+    tracker.add(widget);
+    updateWidget(widget);
+    editorTracker.inject(widget);
+  });
 
   app.docRegistry.addWidgetFactory(factory);
 
-  // Handle the settings of new widgets.
-  // tracker.widgetAdded.connect((sender, widget) => {
-  //   updateWidget(widget);
-  // });
-
-  // commands.addCommand(CommandIDs.lineNumbers, {
-  //   execute: () => {
-  //     const key = 'lineNumbers';
-  //     const value = lineNumbers = !lineNumbers;
-  //
-  //     updateTracker();
-  //     return settingRegistry.set(id, key, value).catch((reason: Error) => {
-  //       console.error(`Failed to set ${id}:${key} - ${reason.message}`);
-  //     });
-  //   },
-  //   isEnabled: hasWidget,
-  //   isToggled: () => lineNumbers,
-  //   label: 'Line Numbers'
-  // });
-  //
-  // commands.addCommand(CommandIDs.lineWrap, {
-  //   execute: () => {
-  //     const key = 'lineWrap';
-  //     const value = lineWrap = !lineWrap;
-  //
-  //     updateTracker();
-  //     return settingRegistry.set(id, key, value).catch((reason: Error) => {
-  //       console.error(`Failed to set ${id}:${key} - ${reason.message}`);
-  //     });
-  //   },
-  //   isEnabled: hasWidget,
-  //   isToggled: () => lineWrap,
-  //   label: 'Word Wrap'
-  // });
-  //
-  // commands.addCommand(CommandIDs.changeTabs, {
-  //   label: args => args['name'] as string,
-  //   execute: args => {
-  //     let widget = tracker.currentWidget;
-  //     if (!widget) {
-  //       return;
-  //     }
-  //     let editor = widget.editor;
-  //     let size = args['size'] as number || 4;
-  //     let insertSpaces = !!args['insertSpaces'];
-  //     editor.setOption('insertSpaces', insertSpaces);
-  //     editor.setOption('tabSize', size);
-  //   },
-  //   isEnabled: hasWidget,
-  //   isToggled: args => {
-  //     let widget = tracker.currentWidget;
-  //     if (!widget) {
-  //       return false;
-  //     }
-  //     let insertSpaces = !!args['insertSpaces'];
-  //     let size = args['size'] as number || 4;
-  //     let editor = widget.editor;
-  //     if (editor.getOption('insertSpaces') !== insertSpaces) {
-  //       return false;
-  //     }
-  //     return editor.getOption('tabSize') === size;
-  //   }
-  // });
-  //
-  // commands.addCommand(CommandIDs.matchBrackets, {
-  //   execute: () => {
-  //     matchBrackets = !matchBrackets;
-  //     tracker.forEach(widget => {
-  //       widget.editor.setOption('matchBrackets', matchBrackets);
-  //     });
-  //     return settingRegistry.set(id, 'matchBrackets', matchBrackets);
-  //   },
-  //   label: 'Match Brackets',
-  //   isEnabled: hasWidget,
-  //   isToggled: () => matchBrackets
-  // });
-  //
-  // commands.addCommand(CommandIDs.autoClosingBrackets, {
-  //   execute: () => {
-  //     autoClosingBrackets = !autoClosingBrackets;
-  //     tracker.forEach(widget => {
-  //       widget.editor.setOption('autoClosingBrackets', autoClosingBrackets);
-  //     });
-  //     return settingRegistry
-  //       .set(id, 'autoClosingBrackets', autoClosingBrackets);
-  //   },
-  //   label: 'Auto-Closing Brackets',
-  //   isEnabled: hasWidget,
-  //   isToggled: () => autoClosingBrackets
-  // });
 
   commands.addCommand(CommandIDs.createConsole, {
     execute: args => {
@@ -284,15 +214,18 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IE
       return commands.execute('console:create', {
         activate: args['activate'],
         path: widget.context.path,
-        preferredLanguage: widget.context.model.defaultKernelLanguage
+        preferredLanguage: widget.context.model.defaultKernelLanguage,
+        ref: widget.id,
+        insertMode: 'split-bottom'
       });
     },
-    isEnabled: hasWidget,
+    isEnabled,
     label: 'Create Console for Editor'
   });
 
   commands.addCommand(CommandIDs.runCode, {
     execute: () => {
+      console.log('**sql-ext.runCode');
       // Run the appropriate code, taking into account a ```fenced``` code block.
       const widget = tracker.currentWidget;
 
@@ -345,25 +278,32 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IE
         return Promise.resolve(void 0);
       }
     },
-    isEnabled: hasWidget,
+    isEnabled,
     label: 'Run Code'
   });
 
-  // commands.addCommand(CommandIDs.markdownPreview, {
-  //   execute: () => {
-  //     let widget = tracker.currentWidget;
-  //     if (!widget) {
-  //       return;
-  //     }
-  //     let path = widget.context.path;
-  //     return commands.execute('markdownviewer:open', { path });
-  //   },
-  //   isVisible: () => {
-  //     let widget = tracker.currentWidget;
-  //     return widget && PathExt.extname(widget.context.path) === '.md' || false;
-  //   },
-  //   label: 'Show Markdown Preview'
-  // });
+  // Function to create a new untitled text file, given the current working directory.
+  const createNew = (cwd: string) => {
+    console.log('** sql-ext.createNew');
+    return commands.execute('docmanager:new-untitled', {
+      path: cwd, type: 'file', ext: 'sql'
+    }).then(model => {
+      return commands.execute('docmanager:open', {
+        path: model.path, factory: FACTORY
+      });
+    });
+  };
+
+
+  // Add a command for creating a new text file.
+  commands.addCommand(CommandIDs.createNew, {
+    label: 'SQL File',
+    caption: 'Create a new sql file',
+    execute: () => {
+      let cwd = browserFactory.defaultBrowser.model.path;
+      return createNew(cwd);
+    }
+  });
 
   // Add a launcher item if the launcher is available.
   if (launcher) {
@@ -372,23 +312,42 @@ function activate(app: JupyterLab, restorer: ILayoutRestorer, editorServices: IE
       category: 'Other',
       rank: 1,
       iconClass: EDITOR_ICON_CLASS,
-      callback: cwd => {
-        return commands.execute('docmanager:new-untitled', {
-          path: cwd, type: 'file', ext: 'sql'
-        }).then(model => {
-          return commands.execute('docmanager:open', {
-            path: model.path, factory: FACTORY
-          });
-        });
-      }
+      callback: createNew
     });
   }
 
-  app.contextMenu.addItem({
-    command: CommandIDs.createConsole, selector: '.trails-SQLEditor'
-  });
+  // menu.fileMenu.newMenu.addGroup([{ command: CommandIDs.createNew }], 30);
+  //
+  // menu.fileMenu.consoleCreators.add({
+  //   tracker,
+  //   name: 'Editor',
+  //   createConsole: current => {
+  //     const options = {
+  //       path: current.context.path,
+  //       preferredLanguage: current.context.model.defaultKernelLanguage
+  //     };
+  //     return commands.execute('console:create', options);
+  //   }
+  // } as IFileMenu.IConsoleCreator<SQLEditor>);
+  //
+  // // Add a code runner to the Run menu.
+  // menu.runMenu.codeRunners.add({
+  //   tracker,
+  //   noun: 'Code',
+  //   isEnabled: current => {
+  //     let found = false;
+  //     consoleTracker.forEach(console => {
+  //       if (console.console.session.path === current.context.path) {
+  //         found = true;
+  //       }
+  //     });
+  //     return found;
+  //   },
+  //   run: () => commands.execute(CommandIDs.runCode)
+  // } as IRunMenu.ICodeRunner<SQLEditor>);
+  //
   // app.contextMenu.addItem({
-  //   command: CommandIDs.markdownPreview, selector: '.jp-FileEditor'
+  //   command: CommandIDs.createConsole, selector: '.trails-SQLEditor'
   // });
 
   return tracker;

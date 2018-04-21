@@ -34,6 +34,7 @@ const overview: JupyterLabPlugin<void> = {
 };
 
 function activateOverview(app: JupyterLab, restorer: ILayoutRestorer, sqltracker: ISQLEditorTracker): void {
+  console.log('overview activated');
   const { commands, shell } = app;
 
   const tracker = new InstanceTracker<Overview>({ namespace });
@@ -47,6 +48,7 @@ function activateOverview(app: JupyterLab, restorer: ILayoutRestorer, sqltracker
   shell.addToLeftArea(widget, { rank: 100 });
 
   app.restored.then(layout => {
+    console.log('overview after app.restored');
     if (layout.fresh) {
       commands.execute(CommandIDs.showOverview, void 0);
     }
