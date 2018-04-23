@@ -74,11 +74,11 @@ let config = {
     'Cmd-/': 'toggleComment',
     'Ctrl-/': 'toggleComment',
     Tab: function(cm) {
-      var spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
+      let spaces = Array(cm.getOption("indentUnit") + 1).join(" ");
       cm.replaceSelection(spaces);
       }
   },
-}
+};
 
 
 /**

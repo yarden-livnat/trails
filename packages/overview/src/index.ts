@@ -1,6 +1,6 @@
 import '../style/index.css';
 
-export * from './overview';
+// export * from './overview';
 
-import { overview } from './plugin';
-export default overview;
+import { tracker } from './plugin';
+export default tracker;

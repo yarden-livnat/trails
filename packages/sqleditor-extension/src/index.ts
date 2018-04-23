@@ -316,8 +316,8 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
     });
   }
 
-  // menu.fileMenu.newMenu.addGroup([{ command: CommandIDs.createNew }], 30);
-  //
+  menu.fileMenu.newMenu.addGroup([{ command: CommandIDs.createNew }], 30);
+
   // menu.fileMenu.consoleCreators.add({
   //   tracker,
   //   name: 'Editor',
