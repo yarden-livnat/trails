@@ -1,4 +1,3 @@
-
 import {
   JupyterLab, JupyterLabPlugin, ILayoutRestorer
 } from '@jupyterlab/application';
@@ -8,28 +7,21 @@ import {
 } from '@jupyterlab/apputils';
 
 import {
-  IMainMenu
-} from '@jupyterlab/mainmenu';
-
-import {
   ReadonlyJSONObject
 } from '@phosphor/coreutils';
 
 import {
-  DockLayout
-} from '@phosphor/widgets';
+  JSONExt // new
+} from '@phosphor/coreutils';
+
 
 import {
-  ISQLEditorTracker
-} from '@trails/sqleditor';
+  DockLayout, Widget
+} from '@phosphor/widgets';
 
 import {
   Overview
 } from './overview';
-
-import {
-  IOverviewTracker
-} from './tracker';
 
 
 namespace CommandIDs {
@@ -46,51 +38,73 @@ namespace CommandIDs {
   const hide = 'overview:hide';
 }
 
-export
-const tracker: JupyterLabPlugin<IOverviewTracker> = {
-  id: '@trails/overview-extension:tracker',
-  provides: IOverviewTracker,
-  requires: [ IMainMenu, ICommandPalette, ILayoutRestorer/*, ISQLEditorTracker*/],
-  activate: activateOverview,
-  autoStart: true
+/**
+ * Initialization data for the jupyterlab_xkcd extension.
+ */
+const extension: JupyterLabPlugin<void> = {
+  id: '@trails/overview',
+  autoStart: true,
+  requires: [ICommandPalette, ILayoutRestorer],
+  activate: activate
 };
 
-function activateOverview(app: JupyterLab, mainMenu: IMainMenu, palette: ICommandPalette, restorer: ILayoutRestorer /*,
-                          sqltracker: ISQLEditorTracker*/): IOverviewTracker {
-  console.log('overview plugin activated');
+function activate(app: JupyterLab, palette: ICommandPalette, restorer: ILayoutRestorer) {
+  console.log('overview extension activated');
   const { commands, shell } = app;
   const category = 'Overview';
 
-  const tracker = new InstanceTracker<Overview>({ namespace: 'overview' });
-
-  restorer.restore(tracker, {
-    command: CommandIDs.open,
-    args: widget => { console.log('restore: ', widget); return {
-      path: widget.context.path,
-      name: widget.context.path
-    }},
-    name: widget => widget.context.path
-  });
-
-  // *** old
-  // const widget = new Overview(sqltracker);
-  // tracker.add(widget);
+  // Declare a widget variable
+  // let widget: Overview;
   //
-  // restorer.add(widget, namespace);
-  //
-  // addCommands(app, tracker, widget);
-  // shell.addToLeftArea(widget, { rank: 100 });
-  //
-  // app.restored.then(layout => {
-  //   console.log('overview after app.restored');
-  //   if (layout.fresh) {
-  //     commands.execute(CommandIDs.showOverview, void 0);
+  // // Add an application command
+  // app.commands.addCommand(command, {
+  //   label: 'Random xkcd comic',
+  //   execute: () => {
+  //     if (!widget) {
+  //       // Create a new widget if one does not exist
+  //       widget = new Overview();
+  //       widget.update();
+  //     }
+  //     if (!tracker.has(widget)) {
+  //       // Track the state of the widget for later restoration
+  //       tracker.add(widget);
+  //     }
+  //     if (!widget.isAttached) {
+  //       // Attach the widget to the main area if it's not there
+  //       app.shell.addToMainArea(widget);
+  //     } else {
+  //       // Refresh the comic in the widget
+  //       widget.update();
+  //     }
+  //     // Activate the widget
+  //     app.shell.activateById(widget.id);
   //   }
   // });
 
+  // // Add the command to the palette.
+  // palette.addItem({ command, category: 'Tutorial' });
+
+  // restorer.restore(tracker, {
+  //   command,
+  //   args: () => JSONExt.emptyObject,
+  //   name: () => 'overview'
+  // });
+
+  // Track and restore the widget state
+  let tracker = new InstanceTracker<Widget>({ namespace: 'overview' });
+
+  restorer.restore(tracker, {
+      command: CommandIDs.open,
+      args: widget => ({
+        path: widget.path,
+        name: widget.name
+      }),
+      name: widget => widget.name
+    });
+
   interface ICreateOptions extends Partial<Overview.IOptions> {
     ref?: string;
-    insertMode?: DockLayout.InsertMode;
+    insertMode?: DockLayout.InsertMode; 
   }
 
   function isEnabled(): boolean {
@@ -111,7 +125,7 @@ function activateOverview(app: JupyterLab, mainMenu: IMainMenu, palette: IComman
   }
 
   // Get the current widget and activate unless the args specify otherwise.
-  function getCurrent(args: ReadonlyJSONObject): Overview | null {
+  function getCurrent(args: ReadonlyJSONObject): Widget { //Overview | null {
     let widget = tracker.currentWidget;
     let activate = args['activate'] !== false;
     if (activate && widget) {
@@ -120,48 +134,32 @@ function activateOverview(app: JupyterLab, mainMenu: IMainMenu, palette: IComman
     return widget;
   }
 
-  // commands.addCommand(CommandIDs.open, {
-  //   execute: (args: Partial<Overview.IOptions>) => {
-  //     let path = args['path'];
-  //     let widget = tracker.find(value => value.id == path);
-  //     if (widget) {
-  //       shell.activateById(widget.id);
-  //     }
-  //   }
-  // });
+  commands.addCommand(CommandIDs.open, {
+    execute: (args: Partial<Overview.IOptions>) => {
+      let path = args['path'];
+      let widget = tracker.find(value => value.id == path);
+      if (widget) {
+        shell.activateById(widget.id);
+      }
+    }
+  });
 
-  // commands.addCommand(CommandIDs.create, {
-  //   label: args => args['isPalette'] ? 'New Overview' : 'Overview',
-  //   execute: (args: Partial<Overview.IOptions>) => {
-  //     let basePath = args.basePath;
-  //     return createOverview({ basePath, ...args });
-  //   }
-  // });
-  //
-  // [
-  //   CommandIDs.create,
-  // ].forEach(command => palette.addItem({ command, category, args: {'isPalette': true }}));
-  //
-  // mainMenu.fileMenu.newMenu.addGroup([{ command: CommandIDs.create }], 0);
+  commands.addCommand(CommandIDs.create, {
+    label: args => args['isPalette'] ? 'New Overview' : 'Overview',
+    execute: (args: Partial<Overview.IOptions>) => {
+      console.log('overview.create:', args);
+      let basePath = args.basePath;
+      return createOverview({ basePath, ...args });
+    }
+  });
 
-  console.log('return tracker', tracker);
-  return tracker;
+  [
+    CommandIDs.create,
+  ].forEach(command => palette.addItem({ command, category, args: {'isPalette': true }}));
+
+  // mainMenu.fileMenu.newMenu.addGroup([{ command: CommandIDs.create }], 0)
 }
 
 
-//
-// function addCommands(app: JupyterLab, tracker: InstanceTracker<Overview>, overview: Overview): void {
-//   const { commands } = app;
-//
-//   commands.addCommand(CommandIDs.showOverview, {
-//     execute: () => { app.shell.activateById(overview.id); }
-//   });
-//
-//   commands.addCommand(CommandIDs.hideOverview, {
-//     execute: () => {
-//       if (!overview.isHidden) {
-//         app.shell.collapseLeft();
-//       }
-//     }
-//   });
-// }
+
+export default extension;

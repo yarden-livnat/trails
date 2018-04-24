@@ -1,0 +1,45 @@
+{
+  "name": "@trails/overview",
+  "version": "0.3.0",
+  "description": "Trails - Overview Widget ",
+  "license": "BSD-3-Clause",
+  "author": "Yarden Livnat",
+  "files": [
+    "lib/**/*.{d.ts,eot,gif,html,jpg,js,js.map,json,png,svg,woff2,ttf}",
+    "style/**/*.{css,eot,gif,html,jpg,json,png,svg,woff2,ttf}",
+    "schema/*.json"
+  ],
+  "main": "lib/index.js",
+  "types": "lib/index.d.ts",
+  "directories": {
+    "lib": "lib/"
+  },
+  "scripts": {
+    "postinstall": "npm link ../sqleditor",
+    "build": "tsc",
+    "clean": "rimraf lib",
+    "watch": "tsc -w",
+    "link": "jupyter labextension install --no-build",
+    "prepack": "npm run clean && npm run build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yarden-livnat/trails.git"
+  },
+  "dependencies": {
+    "@jupyterlab/application": "^0.16.2",
+    "@jupyterlab/apputils": "^0.16.3",
+    "@jupyterlab/mainmenu": "^0.5.2",
+    "@phosphor/widgets": "^1.5.0",
+    "@types/d3": "^5.0.0",
+    "d3": "^5.1.0",
+    "d3-component": "^3.1.0"
+  },
+  "devDependencies": {
+    "rimraf": "~2.6.2",
+    "typescript": "~2.6.2"
+  },
+  "jupyterlab": {
+    "extension": true
+  }
+}

@@ -3,34 +3,20 @@ import {
 } from '@jupyterlab/coreutils';
 
 import {
+  Message
+} from '@phosphor/messaging';
+
+import {
   Widget
 } from '@phosphor/widgets';
 
-// import * as d3 from 'd3';
-// import {component} from 'd3-component';
 
-// import {
-//   SQLEditor, Structure, IStructureItem
-// } from '@trails/sqleditor';
-
-const OVERVIEW_CLASS = 'trails_overview';
-const OVERVIEW_ICON_CLASS = 'jp-CodeConsoleIcon'; // *** todo: use own icon
-
-const ICONS = {
-  block: 'fa fa-square-o',
-  table: 'fa fa-table',
-  use: 'fa fa-database',
-  report: 'fa fa-book',
-  procedure: 'fa fa-code',
-  unknown: 'fa fa-question'
-};
+// import '../style/index.css';
 
 let count = 0;
 
-
-function icon(type) {
-  return ICONS[type] || ICONS['unknown'];
-}
+const OVERVIEW_CLASS = 'trails_overview';
+const OVERVIEW_ICON_CLASS = 'jp-CodeConsoleIcon'; // *** todo: use own icon
 
 export
 class Overview extends Widget {
@@ -38,96 +24,50 @@ class Overview extends Widget {
     super();
 
     this.addClass(OVERVIEW_CLASS);
-
     let { path, basePath, name} = options;
-    path = path || `${basePath || ''}/overview-${count++}-${uuid()}`;
+    this.path = path = path || `${basePath || ''}/overview-${count++}-${uuid()}`;
 
     this.id = `overview-${path}`;
     this.title.icon = OVERVIEW_ICON_CLASS;
     this.title.label = path;
     this.title.closable = true;
 
-    console.log('new Overview class', path, basePath);
-    // this._tracker = tracker;
-    //
-    // tracker.widgetAdded.connect(this.widgetAdded, this);
-    // tracker.currentChanged.connect(this.widgetChanged, this);
-    //
-    // d3.select(this.node)
-    //   .append('ul')
-    //   .attr('class', 'itemsList');
+    this.name = this.id;
+    console.log('new Overview class', this.id, path, basePath);
+
+    this.img = document.createElement('img');
+    this.img.className = 'jp-xkcdCartoon';
+    this.node.appendChild(this.img);
+
+    this.img.insertAdjacentHTML('afterend',
+      `<div class="jp-xkcdAttribution">
+        <a href="https://creativecommons.org/licenses/by-nc/2.5/" class="jp-xkcdAttribution" target="_blank">
+          <img src="https://licensebuttons.net/l/by-nc/2.5/80x15.png" />
+        </a>
+      </div>`
+    );
   }
 
-  // displose() : void {
-  //   super.dispose();
-  // }
+  readonly name:string;
+  readonly path:string;
 
-  // widgetAdded(tracker:ISQLEditorTracker, widget:SQLEditor) {
-  //   console.log('overview: widget added', widget.context.path);
-  //   widget.structureChanged.connect(this.structureChanged, this);
-  // }
+  // /**
+  //  * The image element associated with the widget.
+  //  */
+  readonly img: HTMLImageElement;
   //
-  // widgetChanged(tracker:ISQLEditorTracker, widget:SQLEditor) {
-  //   console.log('overview: widgetChanged', widget.context.path);
-  //   this._current = widget;
-  //   this._structure = widget && widget.structure || new Structure();
-  //   this.render();
-  // }
-
-  // structureChanged(widget:SQLEditor, structure:Structure) {
-  //   // console.log('overviw: structure', widget, structure, widget == this._current);
-  //   if (widget == this._current) {
-  //     this._structure = structure;
-  //     this.render();
-  //   }
-  // }
-  //
-  //
-  // render() {
-  //   let self = this;
-  //   let items = d3.select(this.node).select('.itemsList').selectAll('.item')
-  //     .data(this._structure.items, (d:any) => d ? d.id : null);
-  //
-  //   let enter = items.enter().append('div')
-  //     .attr('class', 'item')
-  //     .on('mouseenter', d => self.highlight(d, true))
-  //     .on('mouseleave', d => self.highlight(d, false));
-  //
-  //   enter.append('i').attr('class', 'icon')
-  //     .attr('class', d => icon(d.type.toLowerCase()))
-  //     .on('click', d => self.fold(d));
-  //
-  //   enter.append('div').attr('class', 'name')
-  //     .text(d => d.name)
-  //     .on('click', d => self.select(d));
-  //
-  //   let merged = enter.merge(items)
-  //     .classed('tr-overview-fold', d => d.fold)
-  //     .classed('tr-overview-folded', d => d.folded)
-  //     .style('padding-left', d => {
-  //       // console.log(d.name, d.level);
-  //       return `${(d.level-1)*20}px`;
-  //     });
-  //
-  //   items.exit().remove();
-  // }
-  //
-  //
-  // highlight(item, state) {
-  //   this._current.highlight(item, state);
-  // }
-  //
-  // fold(item) {
-  //   this._current.fold(item);
-  // }
-  //
-  // select(item) {
-  //   this._current.revile(item);
-  // }
-  //
-  // private _structure : Structure = new Structure();
-  // // private _tracker: ISQLEditorTracker;
-  // private _current: SQLEditor = null;
+  /**
+   * Handle update requests for the widget.
+   */
+  onUpdateRequest(msg: Message): void {
+    fetch('https://egszlpbmle.execute-api.us-east-1.amazonaws.com/prod').then(response => {
+      return response.json();
+    }).then(data => {
+      this.img.src = data.img;
+      this.img.alt = data.title;
+      this.img.title = data.alt;
+    });
+  }
 }
 
 export

@@ -91,6 +91,9 @@ class SQLEditor extends FileEditor {
     this.removeClass('jp-FileEditor');
     this.addClass(EDITOR_CLASS);
 
+    if (options.context.path) this.id = options.context.path;
+    console.log('SQLEditor id=', this.id);
+
     let editor = this.editor['editor'];
 
     let extraKeys = editor.getOption('extraKeys') || {};

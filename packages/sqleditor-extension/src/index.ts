@@ -85,7 +85,7 @@ namespace CommandIDs {
   const runCode = 'sqleditor:run-code';
 
   export
-  const markdownPreview = 'sqleditor:markdown-preview';
+  const createOverview = 'sqleditor:create-overview';
 }
 
 
@@ -223,6 +223,22 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
     label: 'Create Console for Editor'
   });
 
+  commands.addCommand(CommandIDs.createOverview, {
+    execute: args => {
+      const widget = tracker.currentWidget;
+      if (!widget) return;
+
+      return commands.execute('overview:create', {
+        activate: args['activate'],
+        path: widget.context.path,
+        ref: widget.id,
+        insertMode: 'split-bottom'
+      });
+    },
+    isEnabled,
+    label: 'create Overview for Editor'
+  });
+
   commands.addCommand(CommandIDs.runCode, {
     execute: () => {
       console.log('**sql-ext.runCode');
@@ -317,6 +333,8 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
   }
 
   menu.fileMenu.newMenu.addGroup([{ command: CommandIDs.createNew }], 30);
+
+  menu.fileMenu.addGroup([{ command: CommandIDs.createOverview }], 30);
 
   // menu.fileMenu.consoleCreators.add({
   //   tracker,
