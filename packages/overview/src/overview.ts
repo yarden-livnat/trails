@@ -1,5 +1,5 @@
 import {
-  uuid
+  PathExt
 } from '@jupyterlab/coreutils';
 
 import {
@@ -11,7 +11,7 @@ import {
 } from '@phosphor/widgets';
 
 
-// import '../style/index.css';
+import '../style/index.css';
 
 let count = 0;
 
@@ -24,16 +24,15 @@ class Overview extends Widget {
     super();
 
     this.addClass(OVERVIEW_CLASS);
-    let { path, basePath, name} = options;
-    this.path = path = path || `${basePath || ''}/overview-${count++}-${uuid()}`;
+    let { path, name} = options;
+    this.path = path;
 
-    this.id = `overview-${path}`;
+    this.id = `overview-${count}`;
     this.title.icon = OVERVIEW_ICON_CLASS;
-    this.title.label = path;
+    this.title.label = PathExt.basename(path);
     this.title.closable = true;
 
-    this.name = this.id;
-    console.log('new Overview class', this.id, path, basePath);
+    console.log('new Overview class', this.id, path);
 
     this.img = document.createElement('img');
     this.img.className = 'jp-xkcdCartoon';
@@ -48,7 +47,7 @@ class Overview extends Widget {
     );
   }
 
-  readonly name:string;
+  // readonly name:string;
   readonly path:string;
 
   // /**

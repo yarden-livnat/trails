@@ -223,25 +223,8 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
     label: 'Create Console for Editor'
   });
 
-  commands.addCommand(CommandIDs.createOverview, {
-    execute: args => {
-      const widget = tracker.currentWidget;
-      if (!widget) return;
-
-      return commands.execute('overview:create', {
-        activate: args['activate'],
-        path: widget.context.path,
-        ref: widget.id,
-        insertMode: 'split-bottom'
-      });
-    },
-    isEnabled,
-    label: 'create Overview for Editor'
-  });
-
   commands.addCommand(CommandIDs.runCode, {
     execute: () => {
-      console.log('**sql-ext.runCode');
       // Run the appropriate code, taking into account a ```fenced``` code block.
       const widget = tracker.currentWidget;
 
@@ -298,9 +281,24 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
     label: 'Run Code'
   });
 
+  commands.addCommand(CommandIDs.createOverview, {
+    execute: args => {
+      const widget = tracker.currentWidget;
+      if (!widget) return;
+
+      return commands.execute('overview:create', {
+        activate: args['activate'],
+        path: widget.context.path,
+        ref: widget.id,
+        insertMode: 'split-bottom'
+      });
+    },
+    isEnabled,
+    label: 'create Overview for Editor'
+  });
+
   // Function to create a new untitled text file, given the current working directory.
   const createNew = (cwd: string) => {
-    console.log('** sql-ext.createNew');
     return commands.execute('docmanager:new-untitled', {
       path: cwd, type: 'file', ext: 'sql'
     }).then(model => {
