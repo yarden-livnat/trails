@@ -1,6 +1,3 @@
-// Copyright (c) Jupyter Development Team.
-// Distributed under the terms of the Modified BSD License.
-
 import {
   ILayoutRestorer, JupyterLab, JupyterLabPlugin
 } from '@jupyterlab/application';
@@ -83,9 +80,6 @@ namespace CommandIDs {
 
   export
   const runCode = 'sqleditor:run-code';
-
-  export
-  const createOverview = 'sqleditor:create-overview';
 }
 
 
@@ -281,22 +275,6 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
     label: 'Run Code'
   });
 
-  commands.addCommand(CommandIDs.createOverview, {
-    execute: args => {
-      const widget = tracker.currentWidget;
-      if (!widget) return;
-
-      return commands.execute('overview:create', {
-        activate: args['activate'],
-        path: widget.context.path,
-        ref: widget.id,
-        insertMode: 'split-bottom'
-      });
-    },
-    isEnabled,
-    label: 'create Overview for Editor'
-  });
-
   // Function to create a new untitled text file, given the current working directory.
   const createNew = (cwd: string) => {
     return commands.execute('docmanager:new-untitled', {
@@ -331,40 +309,6 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
   }
 
   menu.fileMenu.newMenu.addGroup([{ command: CommandIDs.createNew }], 30);
-
-  menu.fileMenu.addGroup([{ command: CommandIDs.createOverview }], 30);
-
-  // menu.fileMenu.consoleCreators.add({
-  //   tracker,
-  //   name: 'Editor',
-  //   createConsole: current => {
-  //     const options = {
-  //       path: current.context.path,
-  //       preferredLanguage: current.context.model.defaultKernelLanguage
-  //     };
-  //     return commands.execute('console:create', options);
-  //   }
-  // } as IFileMenu.IConsoleCreator<SQLEditor>);
-  //
-  // // Add a code runner to the Run menu.
-  // menu.runMenu.codeRunners.add({
-  //   tracker,
-  //   noun: 'Code',
-  //   isEnabled: current => {
-  //     let found = false;
-  //     consoleTracker.forEach(console => {
-  //       if (console.console.session.path === current.context.path) {
-  //         found = true;
-  //       }
-  //     });
-  //     return found;
-  //   },
-  //   run: () => commands.execute(CommandIDs.runCode)
-  // } as IRunMenu.ICodeRunner<SQLEditor>);
-  //
-  // app.contextMenu.addItem({
-  //   command: CommandIDs.createConsole, selector: '.trails-SQLEditor'
-  // });
 
   return tracker;
 }

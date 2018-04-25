@@ -115,7 +115,7 @@ class SQLEditor extends FileEditor {
     console.log('exec');
   }
 
-  public highlight(item: IStructureItem, state:boolean) {
+  public highlight( item: IStructureItem, state:boolean) {
     let editor = this.editor['editor'];
     let bookmark = item as Bookmark;
     let line = (bookmark.find() as any).from.line;
@@ -140,7 +140,7 @@ class SQLEditor extends FileEditor {
     editor.foldCode(at);
   }
 
-  structureChanged = new Signal<this, Structure>(this);
+  readonly structureChanged = new Signal<this, Structure>(this);
 
   readonly structure: Structure = new Structure;
 
