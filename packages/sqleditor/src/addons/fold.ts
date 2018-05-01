@@ -5,7 +5,7 @@ import 'codemirror/addon/fold/foldgutter';
 import 'codemirror/addon/fold/comment-fold';
 
 let CM : any = CodeMirror;
-CM.registerHelper('fold', 'trails', (cm: any, start: any) => {
+CM.registerHelper('fold', 'vatrails', (cm: any, start: any) => {
   let pos = CodeMirror.Pos(start.line, 0);
 
   if (cm.getTokenTypeAt(pos) != 'decorator') return;

@@ -107,9 +107,10 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
                   browserFactory: IFileBrowserFactory, restorer: ILayoutRestorer, settingRegistry: ISettingRegistry,
                   editorTracker: IEditorTracker,
                   palette: ICommandPalette, launcher: ILauncher | null, menu: IMainMenu | null): ISQLEditorTracker {
-  console.log('sqleditor activated');
+  console.log('sql-extension activated');
   const id = plugin.id;
   const namespace = 'trails';
+
 
   app.docRegistry.addFileType({
     name: 'sql',
@@ -213,7 +214,7 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
       });
     },
     isEnabled,
-    label: 'Create Console for Editor'
+    label: 'Create Console for Editor 2'
   });
 
   commands.addCommand(CommandIDs.runCode, {

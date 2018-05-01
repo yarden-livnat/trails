@@ -40,7 +40,7 @@
     "@types/d3": "^5.0.0",
     "d3": "^5.1.0",
     "d3-component": "^3.1.0",
-    "@vatrails/sqleditor": "^0.3.2"
+    "@vatrails/sqleditor": "^0.3.3"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

@@ -123,7 +123,7 @@ function activate(app: JupyterLab, menu: IMainMenu , palette: ICommandPalette, r
   });
 
   commands.addCommand(CommandIDs.attach, {
-    label: 'Attach Overview',
+    label: 'New SQL Overview ',
     caption: 'Attach an Overview to current SQLEditor',
     execute: args => {
       console.log('attach to', args);
@@ -140,6 +140,12 @@ function activate(app: JupyterLab, menu: IMainMenu , palette: ICommandPalette, r
   });
 
   menu.fileMenu.addGroup([{ command: CommandIDs.attach }], 100);
+
+  app.contextMenu.addItem( {
+    command: CommandIDs.attach,
+    selector: '.vatrails-SQLEditor',
+    rank: 0
+  })
 }
 
 

@@ -3,7 +3,7 @@
   "version": "0.2.0",
   "description": "trails",
   "scripts": {
-    "install": "lerna bootstrap --hoist",
+    "install": "lerna bootstrap",
     "dev": "lerna run dev",
     "build": "lerna run build",
     "link": "lerna run link; jupyter lab build",

@@ -30,7 +30,7 @@ let decorators = new Map(
  export
  const DECORATORS_NAMES = ['Block', 'Table', 'Procdure', 'Report', 'Use'];
 
-CodeMirror.defineMode("trails", function(config, parserConfig) {
+CodeMirror.defineMode("vatrails", function(config, parserConfig) {
   let mode = 'text/x-' + (config['dialect'] || 'mssql');
   let sql = CodeMirror.getMode(config, {
     name: mode
@@ -78,7 +78,7 @@ CodeMirror.defineMode("trails", function(config, parserConfig) {
   }
 
   function parser(stream, state) {
-    if (state.context && state.context.trails) {
+    if (state.context && state.context.vatrails) {
       let style = parser_trails(stream, state);
       if (stream.eol()) pop(state);
       return style;
@@ -105,7 +105,7 @@ CodeMirror.defineMode("trails", function(config, parserConfig) {
       prev: state.context,
       indent: stream.indentation(),
       col: stream.column(),
-      trails: true,
+      vatrails: true,
       token: decorator.token
     };
   }
@@ -126,16 +126,16 @@ CodeMirror.defineMode("trails", function(config, parserConfig) {
     blockCommentStart: sql.blockCommentStart,
     blockCommentEnd: sql.blockCommentEnd,
     lineComment: sql.lineComment,
-    fold: 'trails',
+    fold: 'vatrails',
   }
 });
 
-CodeMirror.defineMIME('text/x-trails', 'trails');
+CodeMirror.defineMIME('text/x-vatrails', 'vatrails');
 
 let info:any = {
-  name: 'SQL_Trails',
-  mime: 'text/x-trails',
-  mode: 'trails',
+  name: 'SQL_vaTrails',
+  mime: 'text/x-vatrails',
+  mode: 'vatrails',
   ext: ['sql'],
   file: /\.sql$/i
 };

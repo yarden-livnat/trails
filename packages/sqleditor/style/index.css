@@ -4,13 +4,13 @@
 |----------------------------------------------------------------------------*/
 
 
-.trails-SQLEditor {
+.vatrails-SQLEditor {
     border-top: var(--jp-border-width) solid var(--jp-border-color1);
     margin-top: -1px;
 }
 
 
-.trails-SQLEditor::before {
+.vatrails-SQLEditor::before {
     content: '';
     display: block;
     height: var(--jp-toolbar-micro-height);
@@ -50,6 +50,6 @@ span.cm-desc {
   font-style: italic;
 }
 
-.trails-SQLEditor-highlight {
+.vatrails-SQLEditor-highlight {
   background: yellow;
 }

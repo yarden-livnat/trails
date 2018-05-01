@@ -49,13 +49,13 @@ const DIRTY_CLASS = 'jp-mod-dirty';
 /**
  * The class name added to a jupyter editor widget.
  */
-const EDITOR_CLASS = 'trails-SQLEditor';
+const EDITOR_CLASS = 'vatrails-SQLEditor';
 
 
 let config = {
-  mode: 'trails-sql',
+  mode: 'vatrails-sql',
   dialect: 'mssql',
-  mimeType: 'text/trails-sql',
+  mimeType: 'text/vatrails-sql',
   lineNumbers: true,
   // // smartIndent: true,
   // autoRefresh:true,
@@ -85,7 +85,7 @@ export
 class SQLEditor extends FileEditor {
   constructor(options: FileEditor.IOptions) {
     super(options);
-    this.removeClass('jp-FileEditor');
+    // this.removeClass('jp-FileEditor');
     this.addClass(EDITOR_CLASS);
 
     if (options.context.path) this.id = options.context.path;
@@ -116,8 +116,8 @@ class SQLEditor extends FileEditor {
     let editor = this.editor['editor'];
     let bookmark = item as Bookmark;
     let line = (bookmark.find() as any).from.line;
-    if (state) editor.addLineClass(line, 'background', 'trails-SQLEditor-highlight');
-    else  editor.removeLineClass(line, 'background', 'trails-SQLEditor-highlight');
+    if (state) editor.addLineClass(line, 'background', 'vatrails-SQLEditor-highlight');
+    else  editor.removeLineClass(line, 'background', 'vatrails-SQLEditor-highlight');
   }
 
   public revile(item: IStructureItem) {
