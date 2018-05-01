@@ -32,14 +32,13 @@ import {
   // IRunMenu
 } from '@jupyterlab/mainmenu';
 
-
-import {
-  SQLEditor, SQLEditorFactory, ISQLEditorTracker
-} from '@trails/sqleditor';
-
 import {
   ILauncher
 } from '@jupyterlab/launcher';
+
+import {
+  SQLEditor, SQLEditorFactory, ISQLEditorTracker
+} from '@vatrails/sqleditor';
 
 
 /**
@@ -88,7 +87,7 @@ namespace CommandIDs {
  */
 const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
-  id: '@trails/sqleditor-extension:plugin',
+  id: '@vatrails/sqleditor-extension:plugin',
   requires: [IConsoleTracker, IEditorServices, IFileBrowserFactory, ILayoutRestorer, ISettingRegistry, IEditorTracker],
   optional: [ICommandPalette, ILauncher, IMainMenu],
   provides: ISQLEditorTracker,

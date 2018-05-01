@@ -20,7 +20,7 @@ import {
 
 import {
   ISQLEditorTracker, SQLEditor, Structure
-} from '@trails/sqleditor';
+} from '@vatrails/sqleditor';
 
 import {
   Overview
@@ -46,7 +46,7 @@ namespace CommandIDs {
 
 
 const extension: JupyterLabPlugin<void> = {
-  id: '@trails/overview',
+  id: '@vatrails/overview',
   autoStart: true,
   requires: [IMainMenu, ICommandPalette, ILayoutRestorer, ISQLEditorTracker],
   activate: activate

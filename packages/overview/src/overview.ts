@@ -19,7 +19,7 @@ import { component } from 'd3-component';
 
 import {
   SQLEditor, Structure, IStructureItem
-} from '@trails/sqleditor';
+} from '@vatrails/sqleditor';
 
 import '../style/index.css';
 

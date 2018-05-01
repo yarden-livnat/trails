@@ -1,5 +1,5 @@
 {
-  "name": "@trails/overview-extension",
+  "name": "@vatrails/overview-extension",
   "version": "0.4.0",
   "description": "Trails - Overview Widget",
   "keywords": [
@@ -21,12 +21,14 @@
   "types": "lib/index.d.ts",
   "repository": {
     "type": "git",
-    "url": "https://github.com/jupyterlab/jupyterlab_xkcd.git"
+    "url": "https://github.com/yarden-livnat/trails.git"
   },
   "scripts": {
+    "dev": "npm link ../sqleditor",
     "build": "tsc",
     "clean": "rimraf lib",
-    "watch": "tsc -w"
+    "watch": "tsc -w",
+    "link": "jupyter labextension link . --no-build"
   },
   "dependencies": {
     "@jupyterlab/application": "^0.16.2",
@@ -37,7 +39,8 @@
     "@phosphor/widgets": "^1.5.0",
     "@types/d3": "^5.0.0",
     "d3": "^5.1.0",
-    "d3-component": "^3.1.0"
+    "d3-component": "^3.1.0",
+    "@vatrails/sqleditor": "^0.3.0"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",

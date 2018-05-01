@@ -1,6 +1,6 @@
 {
-  "name": "@trails/sqleditor",
-  "version": "0.3.0",
+  "name": "@vatrails/sqleditor",
+  "version": "0.3.1",
   "description": "Trails - SQLEditor Widget",
   "license": "BSD-3-Clause",
   "author": "Yarden Livnat",
@@ -18,8 +18,7 @@
     "build": "tsc",
     "clean": "rimraf lib",
     "watch": "tsc -w",
-    "link": "jupyter labextension link --no-build"
-  },
+    "link": "jupyter labextension link . --no-build"},
   "repository": {
     "type": "git",
     "url": "https://github.com/yarden-livnat/trails.git"

@@ -1,21 +1,23 @@
 {
-	"name": "trails",
-	"version": "0.2.0",
-	"description": "trails",
-	"scripts": {
-		"install": "lerna bootstrap",
-		"build": "lerna run build",
-		"link": "lerna run link; jupyter lab build",
-		"publish": "lerna publish --git-remote yarden-livnat",
-		"watch": "lerna run --parallel watch"
-	},
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/yarden-livnat/trails.git"
-	},
-	"author": "Yarden Livnat <yarden@sci.utah.edu>",
-	"license": "BSD-3-Clause",
-	"devDependencies": {
-		"lerna": "^2.10.2"
-	}
+  "name": "trails",
+  "version": "0.2.0",
+  "description": "trails",
+  "scripts": {
+    "install": "lerna bootstrap --hoist",
+    "dev": "lerna run dev",
+    "build": "lerna run build",
+    "link": "lerna run link; jupyter lab build",
+    "publish": "lerna publish --git-remote yarden-livnat",
+    "watch": "lerna run --parallel watch",
+    "clean": "lerna run clean"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/yarden-livnat/trails.git"
+  },
+  "author": "Yarden Livnat <yarden@sci.utah.edu>",
+  "license": "BSD-3-Clause",
+  "devDependencies": {
+    "lerna": "^2.10.2"
+  }
 }

@@ -9,7 +9,7 @@ import {Overview} from './overview';
  * The overview tracker token.
  */
 export
-const IOverviewTracker = new Token<IOverviewTracker>('@trails/overview:IOverviewTracker');
+const IOverviewTracker = new Token<IOverviewTracker>('@vatrails/overview:IOverviewTracker');
 /* tslint:enable */
 
 /**

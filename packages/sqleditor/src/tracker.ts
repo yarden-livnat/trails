@@ -16,5 +16,5 @@ interface ISQLEditorTracker extends IInstanceTracker<SQLEditor> {}
  * The editor tracker token.
  */
 export
-const ISQLEditorTracker = new Token<ISQLEditorTracker>('@trails/sqleditor:ISQLEditorTracker');
+const ISQLEditorTracker = new Token<ISQLEditorTracker>('@vatrails/sqleditor:ISQLEditorTracker');
 /* tslint:enable */

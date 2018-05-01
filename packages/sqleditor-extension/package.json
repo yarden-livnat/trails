@@ -1,6 +1,6 @@
 {
-  "name": "@trails/sqleditor-extension",
-  "version": "0.3.0",
+  "name": "@vatrails/sqleditor-extension",
+  "version": "0.3.4",
   "description": "JupyterLab - Editor Widget Extension",
   "homepage": "https://github.com/jupyterlab/jupyterlab",
   "bugs": {
@@ -24,10 +24,11 @@
     "url": "https://github.com/jupyterlab/jupyterlab.git"
   },
   "scripts": {
+    "dev": "npm link ../sqleditor",
     "build": "tsc",
     "clean": "rimraf lib",
     "watch": "tsc -w",
-    "link": "jupyter labextension install --no-build"
+    "link": "jupyter labextension link . --no-build"
   },
   "dependencies": {
     "@jupyterlab/application": "^0.16.2",
@@ -40,7 +41,8 @@
     "@jupyterlab/mainmenu": "^0.5.2",
     "@jupyterlab/launcher": "^0.16.2",
     "@phosphor/coreutils": "^1.3.0",
-    "@phosphor/widgets": "^1.5.0"
+    "@phosphor/widgets": "^1.5.0",
+    "@vatrails/sqleditor": "^0.3.0"
   },
   "devDependencies": {
     "rimraf": "~2.6.2",
