@@ -1,6 +1,6 @@
 {
   "name": "@vatrails/overview-extension",
-  "version": "0.4.0",
+  "version": "0.4.1",
   "description": "Trails - Overview Widget",
   "keywords": [
     "jupyter",
@@ -40,7 +40,7 @@
     "@types/d3": "^5.0.0",
     "d3": "^5.1.0",
     "d3-component": "^3.1.0",
-    "@vatrails/sqleditor": "^0.3.0"
+    "@vatrails/sqleditor": "^0.3.2"
   },
   "devDependencies": {
     "rimraf": "^2.6.2",
