@@ -19,12 +19,12 @@ import {
 } from '@phosphor/widgets';
 
 import {
-  ISQLEditorTracker, SQLEditor, Structure
+  ISQLEditorTracker, SQLEditor
 } from '@vatrails/sqleditor';
 
 import {
   Overview
-} from './overview';
+} from '@vatrails/overview';
 
 
 namespace CommandIDs {

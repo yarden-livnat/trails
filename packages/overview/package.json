@@ -1,6 +1,6 @@
 {
-  "name": "@vatrails/overview-extension",
-  "version": "0.4.1",
+  "name": "@vatrails/overview",
+  "version": "0.5.0",
   "description": "Trails - Overview Widget",
   "keywords": [
     "jupyter",
@@ -45,8 +45,5 @@
   "devDependencies": {
     "rimraf": "^2.6.2",
     "typescript": "~2.6.2"
-  },
-  "jupyterlab": {
-    "extension": true
   }
 }
