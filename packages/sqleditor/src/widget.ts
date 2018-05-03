@@ -85,10 +85,10 @@ export
 class SQLEditor extends FileEditor {
   constructor(options: FileEditor.IOptions) {
     super(options);
-    // this.removeClass('jp-FileEditor');
+    this.removeClass('jp-FileEditor');
     this.addClass(EDITOR_CLASS);
 
-    console.log('New sql editor');
+    console.log('New sql editor 6');
     if (options.context.path) this.id = options.context.path;
     console.log('SQLEditor id=', this.id);
 
@@ -131,6 +131,27 @@ class SQLEditor extends FileEditor {
     editor.scrollIntoView(range);
   }
 
+  public getSQLSelection(): string {
+    let sql = "";
+
+    let cm = this.editor['editor'];
+    if (cm.somethingSelected()) {
+      sql = cm.getSelection()
+    } else {
+      const pos = cm.getCursorPosition();
+      let bookmark = cm.findMarks(this.Pos(pos.line,0), this.Pos(pos.line+1, 0));
+      if (bookmark) {
+        console.log('mark =', bookmark);
+      }
+
+    }
+    return sql;
+  }
+
+  Pos(l,c) {
+    return CodeMirror.Pos(l,c);
+  }
+
   fold(item: IStructureItem) {
     let editor = this.editor['editor'];
     let bookmark = item as Bookmark;
@@ -141,6 +162,7 @@ class SQLEditor extends FileEditor {
   readonly structureChanged = new Signal<this, Structure>(this);
 
   readonly structure: Structure = new Structure;
+  readonly foo:string = 'foo';
 
   find_next(bookmark, editor) {
     let bookmarks = editor.state && editor.state.structure && editor.state.structure.bookmarks;
@@ -158,6 +180,7 @@ class SQLEditor extends FileEditor {
     }
     return null;
   }
+
 }
 
 export

@@ -32,10 +32,9 @@ function State(options) {
 function onChange(cm, change) {
   let state = cm.state.structure;
   if (!state) return;
-  // console.log('onChange from:',change.from, 'to:', change.to, ' change:',change);
   let opt = state.options;
   clearTimeout(state.timeout);
-  state.timeout = setTimeout( () => update(cm), opt.delay || 500);
+  state.timeout = setTimeout( () => update(cm), opt.delay || 300);
 }
 
 function onFold(cm, from, to, type) {
@@ -79,9 +78,9 @@ function findAnnotation(cm, line) {
   let t = 0, n = tokens.length;
   let annotation, name;
 
-  while (++t < n && (annotation = tokens[t]).type != 'annotation');
+  while (++t < n && (annotation = tokens[t]).type != 'annotation') {}
   if (t >= n) return null;
-  while (++t < n && (name = tokens[t]).type != 'identifier');
+  while (++t < n && (name = tokens[t]).type != 'identifier') {}
 
   return {
     type: decorators.get(annotation.string.toLowerCase()),
@@ -89,38 +88,6 @@ function findAnnotation(cm, line) {
     name: t < n && name.string || null
   };
 }
-
-// let count = 0;
-// function updateBookmarks(cm, start, end) {
-//   console.log('upadateBookmarks[', count++,'] start=', start, ' end=', end);
-//   let t0 = performance.now();
-//   let bookmark, bookmarks = [];
-//   for (let line=start.line; line <=end.line; line++) {
-//     let info = findAnnotation(cm, line);
-//     let from = line == start.line ? start : Pos(line, 0);
-//     let to = line == end.line? end : Pos(line, cm.getLine(line).length);
-//
-//     if (!info) {
-//       bookmark = cm.findMarks(from, to).find( mark => mark._structure);
-//       if (bookmark) bookmark.clear();
-//       continue;
-//     }
-//
-//     let update = false;
-//     bookmark = cm.findMarksAt(info.pos).find( mark => mark._structure);
-//     if (!bookmark) {
-//       bookmark =  cm.setBookmark(info.pos) as Bookmark;
-//       bookmark._structure = true;
-//     }
-//     if (bookmark.type != info.type) { bookmark.type = info.type; update = true;}
-//     if (bookmark.name != info.name) { bookmark.name = info.name; update = true;}
-//
-//     if (update) bookmarks.push(bookmark);
-//   }
-//   let t1 = performance.now();
-//   console.log('update bookmarks in ', (t1-t0), ' msec')
-//   if (bookmarks.length > 0) CodeMirror.signal(cm, "structure", cm, bookmarks);
-// }
 
 function updateAllBookmarks(cm, start, end) {
   let t0 = performance.now();

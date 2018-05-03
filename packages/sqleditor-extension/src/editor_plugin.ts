@@ -27,9 +27,9 @@ import {
 } from '@jupyterlab/filebrowser';
 
 import {
-  // IFileMenu,
+  IFileMenu,
   IMainMenu,
-  // IRunMenu
+  IRunMenu
 } from '@jupyterlab/mainmenu';
 
 import {
@@ -107,7 +107,7 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
                   browserFactory: IFileBrowserFactory, restorer: ILayoutRestorer, settingRegistry: ISettingRegistry,
                   editorTracker: IEditorTracker,
                   palette: ICommandPalette, launcher: ILauncher | null, menu: IMainMenu | null): ISQLEditorTracker {
-  console.log('new sql-extension activated');
+  console.log('new sql-extension activated 4');
   const id = plugin.id;
   const namespace = 'trails';
 
@@ -205,22 +205,29 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
         return;
       }
 
+      const path = widget.context.path;
+
       return commands.execute('console:create', {
         activate: args['activate'],
         path: widget.context.path,
         preferredLanguage: widget.context.model.defaultKernelLanguage,
         ref: widget.id,
         insertMode: 'split-bottom'
-      });
+      }).then( con => {
+        const activate = false;
+        const code = '%load_ext sql';
+        return commands.execute('console:inject', { activate, code, path });
+      })
     },
     isEnabled,
-    label: 'Create Console for Editor 2'
+    label: 'Create Console for SQLEditor'
   });
 
   commands.addCommand(CommandIDs.runCode, {
     execute: () => {
       // Run the appropriate code, taking into account a ```fenced``` code block.
       const widget = tracker.currentWidget;
+      console.log('trails: runCodeje l');
 
       if (!widget) {
         return;
@@ -229,7 +236,6 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
       let code = '';
       const editor = widget.editor;
       const path = widget.context.path;
-      const extension = PathExt.extname(path);
       const selection = editor.getSelection();
       const { start, end } = selection;
       let selected = start.column !== end.column || start.line !== end.line;
@@ -240,20 +246,7 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
         const end = editor.getOffsetAt(selection.end);
 
         code = editor.model.value.text.substring(start, end);
-      } else if (MarkdownCodeBlocks.isMarkdown(extension)) {
-        const { text } = editor.model.value;
-        const blocks = MarkdownCodeBlocks.findMarkdownCodeBlocks(text);
-
-        for (let block of blocks) {
-          if (block.startLine <= start.line && start.line <= block.endLine) {
-            code = block.code;
-            selected = true;
-            break;
-          }
-        }
-      }
-
-      if (!selected) {
+      } else {
         // no selection, submit whole line and advance
         code = editor.getLine(selection.start.line);
         const cursor = editor.getCursorPosition();
@@ -263,6 +256,10 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
         }
         editor.setCursorPosition({ line: cursor.line + 1, column: cursor.column });
       }
+
+      code = `%%sql \n${code}`;
+
+      // let sql = widget.getSQLSelection();
 
       const activate = false;
       if (code) {
@@ -309,6 +306,35 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
   }
 
   menu.fileMenu.newMenu.addGroup([{ command: CommandIDs.createNew }], 30);
+
+  menu.fileMenu.consoleCreators.add({
+    tracker,
+    name: 'SQLEditor',
+    createConsole: current => {
+      const options = {
+        path: current.context.path,
+        preferredLanguage: current.context.model.defaultKernelLanguage
+      };
+      return commands.execute(CommandIDs.createConsole, options);
+    }
+  } as IFileMenu.IConsoleCreator<SQLEditor>);
+
+    menu.runMenu.codeRunners.add({
+      tracker,
+      noun: 'SQL',
+      isEnabled: current => {
+        let found = false;
+        consoleTracker.forEach(console => {
+          if (console.console.session.path === current.context.path) {
+            found = true;
+          }
+        });
+        return found;
+      },
+      run: () => commands.execute(CommandIDs.runCode)
+    } as IRunMenu.ICodeRunner<SQLEditor>);
+
+  app.contextMenu.addItem({ command: CommandIDs.createConsole, selector: '.vatrails-SQLEditor' });
 
   return tracker;
 }
