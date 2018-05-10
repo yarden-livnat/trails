@@ -88,7 +88,7 @@ class SQLEditor extends FileEditor {
     this.removeClass('jp-FileEditor');
     this.addClass(EDITOR_CLASS);
 
-    console.log('New sql editor 6');
+    console.log('New sql editor');
     if (options.context.path) this.id = options.context.path;
     console.log('SQLEditor id=', this.id);
 

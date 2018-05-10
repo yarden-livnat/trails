@@ -227,7 +227,7 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
     execute: () => {
       // Run the appropriate code, taking into account a ```fenced``` code block.
       const widget = tracker.currentWidget;
-      console.log('trails: runCodeje l');
+      console.log('trails: runCode ');
 
       if (!widget) {
         return;
