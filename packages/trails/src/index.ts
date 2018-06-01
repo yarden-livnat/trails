@@ -1,4 +1,3 @@
-export * from './trails';
-import {trails} from './plugin';
-
-export default trails;
+export * from './editor';
+export * from './overview';
+export * from './extension';

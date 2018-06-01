@@ -1,0 +1,44 @@
+
+.trails_overview {
+  background-color: white;
+}
+
+.trails_overview .itemsList {
+  list-style-type: none;
+  padding-left: 0;
+  font-size: var(--jp-ui-font-size1);
+  color: var(--jp-ui-font-color1);
+}
+
+.trails_overview .itemsList .item {
+  overflow: hidden;
+  margin-left: 5px;
+}
+
+.trails_overview .itemsList .item i {
+  width: 20px;
+  float: left;
+}
+
+.trails_overview .itemsList .item i fa:hover {
+  font-weight: bold;
+}
+
+.trails_overview .itemsList .item .name {
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 100px;
+  float: left;
+}
+
+.trails_overview .itemsList .item .name:hover {
+  font-weight: bold;
+}
+.tr-overview-fold {
+  color: var(--jp-ui-font-color2);
+  font-style: italic;
+}
+
+.tr-overview-folded {
+  color: var(--jp-ui-font-color3);
+}
