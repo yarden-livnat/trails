@@ -84,7 +84,6 @@ class SQLEditor extends FileEditor {
 
     console.log('New sql editor');
     if (options.context.path) this.id = options.context.path;
-    console.log('SQLEditor id=', this.id);
 
     let editor = this.editor['editor'];
 

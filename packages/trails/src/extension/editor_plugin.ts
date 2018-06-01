@@ -87,7 +87,7 @@ namespace CommandIDs {
  */
 const plugin: JupyterLabPlugin<ISQLEditorTracker> = {
   activate,
-  id: '@vatrails/sqleditor-extension:plugin',
+  id: '@vatrails/editor-extension:plugin',
   requires: [IConsoleTracker, IEditorServices, IFileBrowserFactory, ILayoutRestorer, ISettingRegistry, IEditorTracker],
   optional: [ICommandPalette, ILauncher, IMainMenu],
   provides: ISQLEditorTracker,
@@ -259,8 +259,8 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
 
       code = `%%sql \n${code}`;
 
-      // let sql = widget.getSQLSelection();
-
+      let sql = widget.getSQLSelection();
+      console.log('sql selection:', sql);
       const activate = false;
       if (code) {
         return commands.execute('console:inject', { activate, code, path });
