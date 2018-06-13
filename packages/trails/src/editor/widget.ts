@@ -124,21 +124,42 @@ class SQLEditor extends FileEditor {
     editor.scrollIntoView(range);
   }
 
-  public getSQLSelection(): string {
-    let sql = "";
+  public getSQLSelection(): {type: string, text:string} {
+    let selection;
 
     let cm = this.editor['editor'];
     if (cm.somethingSelected()) {
-      sql = cm.getSelection()
+      let text = cm.getSelection();
+      selection = {type: 'text', text}
     } else {
-      const pos = cm.getCursorPosition();
-      let bookmark = cm.findMarks(this.Pos(pos.line,0), this.Pos(pos.line+1, 0));
-      if (bookmark) {
-        console.log('mark =', bookmark);
-      }
-
+      selection = this.block();
     }
-    return sql;
+    return selection;
+  }
+
+  block(): any {
+    let cm = this.editor['editor'];
+    const pos = {line:cm.getCursor().line, ch:0};
+    if (cm.getTokenTypeAt(pos) != 'decorator')
+      return {type: 'line', text: cm.getLine(pos.line).trim()};
+
+    let from = cm.getLineTokens(pos.line)[1];
+    if (from.string == '@db') {
+      let r = cm.getLine(pos.line).substr(from.end);
+      return {type: 'db', text:r};
+    }
+
+    let start = {line: pos.line, ch: 0};
+    let last = cm.lastLine();
+    while (++pos.line <= last) {
+      if (cm.getTokenTypeAt(pos) != 'decorator') continue;
+      let to = cm.getLineTokens(pos.line)[1];
+      if (to.start > from.start) continue;
+      if (to.start < from.start) break;
+      if (from.string != '@block' || to.string == '@block') break;
+    }
+    let text = cm.getRange(start, {line: pos.line, ch: 0});
+    return {type: pos.line - start.line > 1 && 'block' || 'line', text};
   }
 
   Pos(l,c) {

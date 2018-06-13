@@ -233,37 +233,22 @@ function activate(app: JupyterLab, consoleTracker: IConsoleTracker, editorServic
         return;
       }
 
-      let code = '';
       const editor = widget.editor;
       const path = widget.context.path;
-      const selection = editor.getSelection();
-      const { start, end } = selection;
-      let selected = start.column !== end.column || start.line !== end.line;
 
-      if (selected) {
-        // Get the selected code from the editor.
-        const start = editor.getOffsetAt(selection.start);
-        const end = editor.getOffsetAt(selection.end);
+      let {type, text} = widget.getSQLSelection();
+      if (!text || text == "") return Promise.resolve(void 0);
 
-        code = editor.model.value.text.substring(start, end);
-      } else {
-        // no selection, submit whole line and advance
-        code = editor.getLine(selection.start.line);
-        const cursor = editor.getCursorPosition();
-        if (cursor.line + 1 === editor.lineCount) {
-          let text = editor.model.value.text;
-          editor.model.value.text = text + '\n';
-        }
-        editor.setCursorPosition({ line: cursor.line + 1, column: cursor.column });
-      }
-
-      code = `%%sql \n${code}`;
-
-      let sql = widget.getSQLSelection();
-      console.log('sql selection:', sql);
       const activate = false;
-      if (code) {
-        return commands.execute('console:inject', { activate, code, path });
+      if (type == 'db' ) {
+        let code = `%sql ${text}`;
+        return commands.execute('console:inject', {activate, code, path});
+      } else if (type == 'text' || type == 'block') {
+        let code = `%%sql \n${text}`;
+        return commands.execute('console:inject', {activate, code, path});
+      } else if (type == 'line') {
+        let code = `%sql ${text}`;
+        return commands.execute('console:inject', {activate, code, path});
       } else {
         return Promise.resolve(void 0);
       }

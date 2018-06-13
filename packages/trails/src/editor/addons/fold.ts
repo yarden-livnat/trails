@@ -18,8 +18,7 @@ CM.registerHelper('fold', 'vatrails', (cm: any, start: any) => {
     let to = cm.getLineTokens(pos.line)[1];
     if (to.start > from.start) continue;
     if (to.start < from.start) break;
-    if (from.string == '@block' && to.string != '@block') continue;
-    break;
+    if (from.string != '@block' || to.string == '@block') break;
   }
 
   return {

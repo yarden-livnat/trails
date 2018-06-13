@@ -6,16 +6,18 @@ import 'codemirror/mode/sql/sql';
 const decorator = {token: 'decorator', pattern: /^\s*--\s+(?=@)/};
 
 let annotations = [
-  {token: 'annotation', name: 'Block', pattern: /^@block(?=\s|$)/i},
-  {token: 'annotation', name: 'Table', pattern: /@table(?=\s|$)/i},
-  {token: 'annotation', name: 'Report', pattern: /^@report(?=s\|$)/i},
-  {token: 'annotation', pattern: /^@info(?=\s|$)/i},
-  {token: 'annotation', pattern: /^@debug(?=s\|$)/i},
-  {token: 'annotation', name: 'Use', pattern: /^@use(?=\s|$)/i},
-  {token: 'annotation', name: 'Procdeure', pattern: /^@procedure|@function(?= |$)/i},
-  {token: 'unknown',    pattern: /^@\w*/},
-  {token: 'identifier', pattern: /\S+/},
-  {token: 'text',       pattern: /\S+/}
+  {token: 'annotation', name: 'DB',     pattern: /^@db(?=\s|$)/i},
+  {token: 'annotation', name: 'Block',     pattern: /^@block(?=\s|$)/i},
+  {token: 'annotation', name: 'Table',     pattern: /^@table(?=\s|$)/i},
+  {token: 'annotation', name: 'Report',    pattern: /^@report(?=s\|$)/i},
+  {token: 'annotation',                    pattern: /^@info(?=\s|$)/i},
+  {token: 'annotation',                    pattern: /^@debug(?=s\|$)/i},
+  {token: 'annotation', name: 'Use',       pattern: /^@use(?=\s|$)/i},
+  {token: 'annotation', name: 'Procedure', pattern: /^@procedure|@function(?= |$)/i},
+  {token: 'unknown',                       pattern: /^@\w*/},
+  {token: 'identifier',                    pattern: /\S+/}
+  ,
+  {token: 'text',                          pattern: /\S+/}
 ];
 
 export
@@ -26,11 +28,12 @@ let decorators = new Map(
    ['@use', 'Use'],
    ['@proc', 'Procedure'],
    ['@procedure', 'Procedure'],
-   ['@fucntion', 'Procedure']
+   ['@function', 'Procedure'],
+   ['@db', 'DB']
  ]);
 
  export
- const DECORATORS_NAMES = ['Block', 'Table', 'Procdure', 'Report', 'Use'];
+ const DECORATORS_NAMES = ['Block', 'Table', 'Procedure', 'Report', 'Use', 'Db'];
 
 CodeMirror.defineMode("vatrails", function(config, parserConfig) {
   let mode = 'text/x-' + (config['dialect'] || 'mssql');
